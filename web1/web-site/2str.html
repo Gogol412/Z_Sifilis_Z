@@ -185,26 +185,53 @@
             font-weight: 300;
         }
 
-        /* Contacts Section */
-        .contacts-section {
+        /* About & Contacts Section */
+        .about-contacts-section {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
         }
 
-        .contacts-section .section-title {
+        .about-contacts-section .section-title {
             color: white;
+        }
+
+        .about-contacts-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            margin-top: 50px;
+            text-align: left;
+        }
+
+        .about-content {
+            padding: 40px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+        }
+
+        .about-content h3 {
+            font-size: 28px;
+            margin-bottom: 25px;
+            color: #e67e22;
+            text-align: center;
+        }
+
+        .about-content p {
+            font-size: 18px;
+            margin-bottom: 30px;
+            line-height: 1.8;
         }
 
         .contacts-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 40px;
-            margin-top: 50px;
+            grid-template-columns: 1fr;
+            gap: 30px;
         }
 
         .contact-item {
             background: rgba(255,255,255,0.1);
-            padding: 40px 30px;
+            padding: 30px;
             border-radius: 15px;
             backdrop-filter: blur(10px);
         }
@@ -332,26 +359,33 @@
             box-shadow: 0 4px 15px rgba(230, 126, 34, 0.3);
         }
 
-        /* About Section */
-        .about-section {
-            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        /* Кнопка просмотра меню */
+        .menu-btn {
+            display: inline-block;
+            background: linear-gradient(135deg, #e67e22, #d35400);
             color: white;
-        }
-
-        .about-section .section-title {
-            color: white;
-        }
-
-        .about-content {
-            max-width: 800px;
-            margin: 0 auto;
-            text-align: left;
-        }
-
-        .about-content p {
+            padding: 15px 30px;
+            border-radius: 25px;
+            font-weight: bold;
+            text-decoration: none;
             font-size: 18px;
-            margin-bottom: 30px;
-            line-height: 1.8;
+            margin-top: 20px;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+            box-shadow: 0 4px 15px rgba(230, 126, 34, 0.3);
+            cursor: pointer;
+        }
+
+        .menu-btn:hover {
+            background: linear-gradient(135deg, #d35400, #e67e22);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(230, 126, 34, 0.4);
+            color: white;
+        }
+
+        .menu-btn:active {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 15px rgba(230, 126, 34, 0.3);
         }
 
         /* Experience Section */
@@ -619,6 +653,11 @@
                 grid-template-columns: 1fr;
             }
 
+            .about-contacts-grid {
+                grid-template-columns: 1fr;
+                gap: 30px;
+            }
+
             .language-notification {
                 top: 100px;
                 right: 10px;
@@ -626,7 +665,8 @@
                 text-align: center;
             }
 
-            .assortment-btn {
+            .assortment-btn,
+            .menu-btn {
                 padding: 12px 25px;
                 font-size: 16px;
             }
@@ -687,11 +727,10 @@
         <div class="nav-container">
             <div class="logo" data-ru="LUMINA ESTERIA GRAND HOTEL" data-en="LUMINA ESTERIA GRAND HOTEL">LUMINA ESTERIA GRAND HOTEL</div>
             <ul class="nav-links">
-                <li><a href="#contacts" data-ru="КОНТАКТЫ" data-en="CONTACTS">КОНТАКТЫ</a></li>
+                <li><a href="#about-contacts" data-ru="ИСТОРИЯ И ФИЛОСОФИЯ" data-en="HISTORY & PHILOSOPHY">ИСТОРИЯ И ФИЛОСОФИЯ</a></li>
                 <li><a href="#hotel" data-ru="ОТЕЛЬ" data-en="HOTEL">ОТЕЛЬ</a></li>
                 <li><a href="#restaurant" data-ru="РЕСТОРАН" data-en="RESTAURANT">РЕСТОРАН</a></li>
                 <li><a href="#bar" data-ru="БАР" data-en="BAR">БАР</a></li>
-                <li><a href="#about" data-ru="О НАС" data-en="ABOUT US">О НАС</a></li>
                 <li><a href="#reservation" class="reservation-btn" data-ru="БРОНИРОВАНИЕ" data-en="RESERVATION">БРОНИРОВАНИЕ</a></li>
             </ul>
         </div>
@@ -724,25 +763,32 @@
         </div>
     </section>
 
-    <!-- Contacts Section -->
-    <section id="contacts" class="section contacts-section">
+    <!-- About & Contacts Section -->
+    <section id="about-contacts" class="section about-contacts-section">
         <div class="section-content">
-            <h2 class="section-title" data-ru="КОНТАКТЫ" data-en="CONTACTS">КОНТАКТЫ</h2>
-            <div class="contacts-grid">
-                <div class="contact-item">
-                    <h3 data-ru="АДРЕС" data-en="ADDRESS">АДРЕС</h3>
-                    <p data-ru="Улица Колесникова, 13" data-en="Kolesnikova Street, 13">Улица Колесникова, 13</p>
-                    <p data-ru="Минск, Беларусь" data-en="Minsk, Belarus">Минск, Беларусь</p>
+            <h2 class="section-title" data-ru="ИСТОРИЯ И ФИЛОСОФИЯ" data-en="HISTORY & PHILOSOPHY">ИСТОРИЯ И ФИЛОСОФИЯ</h2>
+            <div class="about-contacts-grid">
+                <div class="about-content">
+                    <h3 data-ru="НАША ИСТОРИЯ" data-en="OUR HISTORY">НАША ИСТОРИЯ</h3>
+                    <p data-ru="LUMINA ESTERIA GRAND HOTEL - это сочетание роскоши, комфорта и безупречного сервиса. Мы создали место, где каждая деталь продумана для вашего максимального удовольствия." data-en="LUMINA ESTERIA GRAND HOTEL is a combination of luxury, comfort and impeccable service. We have created a place where every detail is designed for your maximum pleasure.">LUMINA ESTERIA GRAND HOTEL - это сочетание роскоши, комфорта и безупречного сервиса. Мы создали место, где каждая деталь продумана для вашего максимального удовольствия.</p>
+                    <p data-ru="Наша команда профессионалов готова сделать ваше пребывание незабываемым. Мы гордимся своими традициями и стремимся к совершенству во всем." data-en="Our team of professionals is ready to make your stay unforgettable. We are proud of our traditions and strive for excellence in everything.">Наша команда профессионалов готова сделать ваше пребывание незабываемым. Мы гордимся своими традициями и стремимся к совершенству во всем.</p>
                 </div>
-                <div class="contact-item">
-                    <h3 data-ru="ТЕЛЕФОН" data-en="PHONE">ТЕЛЕФОН</h3>
-                    <p>+375 (29) 131-68-19</p>
-                    <p data-ru="Круглосуточно" data-en="24/7">Круглосуточно</p>
-                </div>
-                <div class="contact-item">
-                    <h3 data-ru="EMAIL" data-en="EMAIL">EMAIL</h3>
-                    <p>micha990000@gmail.com</p>
-                    <p data-ru="Бронирование" data-en="Reservations">tutkostia@gmail.com</p>
+                <div class="contacts-grid">
+                    <div class="contact-item">
+                        <h3 data-ru="АДРЕС" data-en="ADDRESS">АДРЕС</h3>
+                        <p data-ru="Улица Колесникова, 13" data-en="Kolesnikova Street, 13">Улица Колесникова, 13</p>
+                        <p data-ru="Минск, Беларусь" data-en="Minsk, Belarus">Минск, Беларусь</p>
+                    </div>
+                    <div class="contact-item">
+                        <h3 data-ru="ТЕЛЕФОН" data-en="PHONE">ТЕЛЕФОН</h3>
+                        <p>+375 (29) 131-68-19</p>
+                        <p data-ru="Круглосуточно" data-en="24/7">Круглосуточно</p>
+                    </div>
+                    <div class="contact-item">
+                        <h3 data-ru="EMAIL" data-en="EMAIL">EMAIL</h3>
+                        <p>micha990000@gmail.com</p>
+                        <p data-ru="Бронирование" data-en="Reservations">tutkostia@gmail.com</p>
+                    </div>
                 </div>
             </div>
         </div>
@@ -776,6 +822,9 @@
             <div class="restaurant-content">
                 <p data-ru="Наш ресторан предлагает изысканные блюда международной кухни, приготовленные лучшими шеф-поварами из свежайших местных продуктов." data-en="Our restaurant offers exquisite international cuisine dishes prepared by the best chefs from the freshest local ingredients.">Наш ресторан предлагает изысканные блюда международной кухни, приготовленные лучшими шеф-поварами из свежайших местных продуктов.</p>
                 <p data-ru="Уникальная атмосфера и безупречный сервис сделают вашу трапезу незабываемой." data-en="Unique atmosphere and impeccable service will make your meal unforgettable.">Уникальная атмосфера и безупречный сервис сделают вашу трапезу незабываемой.</p>
+                
+                <!-- Кнопка просмотра меню -->
+                <button class="menu-btn" data-ru="ПОСМОТРЕТЬ МЕНЮ" data-en="VIEW MENU">ПОСМОТРЕТЬ МЕНЮ</button>
             </div>
         </div>
     </section>
@@ -791,17 +840,6 @@
                 
                 <!-- Кнопка просмотра ассортимента -->
                 <a href="assortiment.html" target="_blank" class="assortment-btn" data-ru="ПРОСМОТРЕТЬ АССОРТИМЕНТ" data-en="VIEW ASSORTMENT">ПРОСМОТРЕТЬ АССОРТИМЕНТ</a>
-            </div>
-        </div>
-    </section>
-
-    <!-- About Section -->
-    <section id="about" class="section about-section">
-        <div class="section-content">
-            <h2 class="section-title" data-ru="О НАС" data-en="ABOUT US">О НАС</h2>
-            <div class="about-content">
-                <p data-ru="LUMINA ESTERIA GRAND HOTEL - это сочетание роскоши, комфорта и безупречного сервиса. Мы создали место, где каждая деталь продумана для вашего максимального удовольствия." data-en="LUMINA ESTERIA GRAND HOTEL is a combination of luxury, comfort and impeccable service. We have created a place where every detail is designed for your maximum pleasure.">LUMINA ESTERIA GRAND HOTEL - это сочетание роскоши, комфорта и безупречного сервиса. Мы создали место, где каждая деталь продумана для вашего максимального удовольствия.</p>
-                <p data-ru="Наша команда профессионалов готова сделать ваше пребывание незабываемым. Мы гордимся своими традициями и стремимся к совершенству во всем." data-en="Our team of professionals is ready to make your stay unforgettable. We are proud of our traditions and strive for excellence in everything.">Наша команда профессионалов готова сделать ваше пребывание незабываемым. Мы гордимся своими традициями и стремимся к совершенству во всем.</p>
             </div>
         </div>
     </section>
@@ -1019,6 +1057,19 @@
                     e.preventDefault();
                     // Открываем новое окно с файлом assortiment.html
                     window.open('assortiment.html', 'assortiment', 'width=800,height=600,scrollbars=yes,resizable=yes');
+                });
+            }
+
+            // Обработчик кнопки просмотра меню
+            const menuBtn = document.querySelector('.menu-btn');
+            if (menuBtn) {
+                menuBtn.addEventListener('click', function() {
+                    const currentLang = localStorage.getItem('hotelLang') || 'ru';
+                    const message = currentLang === 'ru' 
+                        ? 'Функция просмотра меню скоро будет доступна!' 
+                        : 'Menu viewing feature will be available soon!';
+                    
+                    alert(message);
                 });
             }
         });
