@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html lang="ru">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ассортимент - LUMINA ESTERIA GRAND HOTEL</title>
+    <title>Ассортимент Бара - LUMINA ESTERIA GRAND HOTEL</title>
     <style>
         * {
             margin: 0;
@@ -13,325 +14,400 @@
 
         body {
             font-family: 'Arial', sans-serif;
-            background-color: #f8f8f8;
-            color: #333;
-            line-height: 1.6;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: white;
+            min-height: 100vh;
+            padding: 40px 20px;
         }
 
-        /* Header Styles */
-        .top-bar {
-            display: none; /* Скрываем верхнюю полосу */
-        }
-
-        /* Navigation */
-        nav {
-            background-color: white;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            position: sticky;
-            top: 0;
-            z-index: 100;
-        }
-
-        .nav-container {
+        .container {
             max-width: 1200px;
             margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .header h1 {
+            font-size: 42px;
+            margin-bottom: 20px;
+            color: #e67e22;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        .header p {
+            font-size: 18px;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto 30px;
+        }
+
+        /* Control Panel */
+        .control-panel {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 15px 20px;
-        }
-
-        .logo {
-            font-size: 24px;
-            font-weight: bold;
-            color: #2c3e50;
-            letter-spacing: 2px;
-        }
-
-        /* Main Content */
-        .main-content {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 50px 20px;
-        }
-
-        .page-title {
-            text-align: center;
-            font-size: 42px;
-            margin-bottom: 50px;
-            color: #2c3e50;
-            font-weight: 300;
-        }
-
-        /* Categories Grid */
-        .categories-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: 40px;
-            margin-bottom: 60px;
-        }
-
-        .category-card {
-            background: white;
-            padding: 40px 30px;
-            border-radius: 15px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-            transition: all 0.3s ease;
-            text-align: center;
-        }
-
-        .category-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
-        }
-
-        .category-icon {
-            font-size: 48px;
-            margin-bottom: 20px;
-            color: #e67e22;
-        }
-
-        .category-title {
-            font-size: 24px;
-            margin-bottom: 15px;
-            color: #2c3e50;
-        }
-
-        .category-description {
-            color: #666;
-            font-size: 16px;
-            margin-bottom: 20px;
-        }
-
-        /* Items Grid */
-        .items-section {
-            margin-bottom: 60px;
-        }
-
-        .section-title {
-            font-size: 32px;
             margin-bottom: 30px;
-            color: #2c3e50;
-            text-align: center;
-            font-weight: 300;
+            flex-wrap: wrap;
+            gap: 20px;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 20px;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
         }
 
-        .items-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 30px;
+        .search-box {
+            display: flex;
+            gap: 10px;
+            flex: 1;
+            min-width: 300px;
         }
 
-        .item-card {
-            background: white;
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        .search-input {
+            flex: 1;
+            padding: 12px 20px;
+            border: 2px solid #e67e22;
+            border-radius: 25px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            font-size: 16px;
+        }
+
+        .search-input::placeholder {
+            color: #ccc;
+        }
+
+        .search-input:focus {
+            outline: none;
+            box-shadow: 0 0 10px rgba(230, 126, 34, 0.5);
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 25px;
+            font-size: 16px;
+            cursor: pointer;
             transition: all 0.3s ease;
+            font-weight: bold;
         }
 
-        .item-card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+        .search-btn {
+            background: linear-gradient(135deg, #e67e22, #d35400);
+            color: white;
+        }
+
+        .search-btn:hover {
+            background: linear-gradient(135deg, #d35400, #e67e22);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(230, 126, 34, 0.4);
+        }
+
+        .back-btn {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .back-btn:hover {
+            background: linear-gradient(135deg, #5a6fd8, #667eea);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        /* Menu Grid */
+        .menu-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+
+        .menu-item {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 25px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .menu-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            background: rgba(255, 255, 255, 0.08);
+            border-color: #e67e22;
+        }
+
+        .item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 15px;
         }
 
         .item-name {
             font-size: 20px;
             font-weight: bold;
             color: #e67e22;
-            margin-bottom: 10px;
-        }
-
-        .item-description {
-            color: #666;
-            font-size: 14px;
-            margin-bottom: 15px;
+            flex: 1;
+            margin-right: 15px;
         }
 
         .item-price {
             font-size: 18px;
             font-weight: bold;
-            color: #2c3e50;
+            color: #fff;
+            background: #e67e22;
+            padding: 8px 16px;
+            border-radius: 20px;
+            white-space: nowrap;
         }
 
-        /* Back Button */
-        .back-btn {
-            display: inline-block;
-            background: linear-gradient(135deg, #e67e22, #d35400);
-            color: white;
-            padding: 12px 25px;
-            border-radius: 25px;
-            font-weight: bold;
-            text-decoration: none;
-            font-size: 16px;
-            transition: all 0.3s ease;
-            border: 2px solid transparent;
-            box-shadow: 0 4px 15px rgba(230, 126, 34, 0.3);
-            margin-top: 30px;
-            cursor: pointer;
+        .item-description {
+            color: #ccc;
+            font-size: 14px;
+            line-height: 1.6;
+            margin-bottom: 10px;
         }
 
-        .back-btn:hover {
-            background: linear-gradient(135deg, #d35400, #e67e22);
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(230, 126, 34, 0.4);
-            color: white;
+        .item-ingredients {
+            color: #888;
+            font-size: 12px;
+            font-style: italic;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding-top: 10px;
         }
 
-        /* Footer */
-        .footer {
-            background-color: #2c3e50;
-            color: white;
+        /* Loading and Messages */
+        .loading {
             text-align: center;
-            padding: 40px 20px;
-            margin-top: 60px;
+            padding: 40px;
+            font-size: 18px;
+            color: #e67e22;
         }
 
-        .footer p {
+        .error {
+            text-align: center;
+            padding: 40px;
             font-size: 18px;
-            letter-spacing: 1px;
+            color: #e74c3c;
+            background: rgba(231, 76, 60, 0.1);
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+
+        .empty {
+            text-align: center;
+            padding: 60px 40px;
+            color: #888;
+            font-size: 16px;
+        }
+
+        .stats {
+            color: #ccc;
+            font-size: 14px;
+            text-align: center;
+            margin-bottom: 20px;
         }
 
         /* Responsive */
         @media (max-width: 768px) {
-            .page-title {
-                font-size: 32px;
-            }
-
-            .categories-grid,
-            .items-grid {
+            .menu-grid {
                 grid-template-columns: 1fr;
             }
 
-            .category-card,
-            .item-card {
-                padding: 25px 20px;
+            .header h1 {
+                font-size: 32px;
             }
 
-            .section-title {
-                font-size: 28px;
+            .control-panel {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .search-box {
+                min-width: auto;
+            }
+
+            .item-header {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .item-price {
+                align-self: flex-start;
             }
         }
     </style>
 </head>
+
 <body>
-    <!-- Navigation -->
-    <nav>
-        <div class="nav-container">
-            <div class="logo">LUMINA ESTERIA GRAND HOTEL</div>
-        </div>
-    </nav>
+    <div class="container">
+        <div class="header">
+            <h1>🍸 АССОРТИМЕНТ БАРА</h1>
+            <p>Авторские коктейли и премиальные напитки для истинных ценителей</p>
 
-    <!-- Main Content -->
-    <div class="main-content">
-        <h1 class="page-title">АССОРТИМЕНТ БАРА</h1>
+            <!-- Панель управления -->
+            <div class="control-panel">
+                <div class="search-box">
+                    <input type="text" id="searchInput" class="search-input"
+                        placeholder="Поиск по названию или составу...">
+                    <button id="searchBtn" class="btn search-btn">🔍 Поиск</button>
+                </div>
+                <button onclick="closePage()" class="btn back-btn">← ВЕРНУТЬСЯ</button>
+            </div>
 
-        <!-- Categories -->
-        <div class="categories-grid">
-            <div class="category-card">
-                <div class="category-icon">🍸</div>
-                <h3 class="category-title">АВТОРСКИЕ КОКТЕЙЛИ</h3>
-                <p class="category-description">Уникальные рецепты от наших барменов</p>
-            </div>
-            <div class="category-card">
-                <div class="category-icon">🥃</div>
-                <h3 class="category-title">ПРЕМИАЛЬНЫЕ НАПИТКИ</h3>
-                <p class="category-description">Отборные спиртные напитки со всего мира</p>
-            </div>
-            <div class="category-card">
-                <div class="category-icon">🍷</div>
-                <h3 class="category-title">ВИННАЯ КАРТА</h3>
-                <p class="category-description">Изысканные вина из лучших регионов</p>
-            </div>
-            <div class="category-card">
-                <div class="category-icon">🍴</div>
-                <h3 class="category-title">ИСПАНСКИЕ ТАПАС</h3>
-                <p class="category-description">Традиционные закуски к напиткам</p>
-            </div>
+            <div class="stats" id="stats">Загрузка...</div>
         </div>
 
-        <!-- Cocktails Section -->
-        <div class="items-section">
-            <h2 class="section-title">АВТОРСКИЕ КОКТЕЙЛИ</h2>
-            <div class="items-grid">
-                <div class="item-card">
-                    <div class="item-name">Название коктейля 1</div>
-                    <div class="item-description">Описание коктейля и ингредиенты</div>
-                    <div class="item-price">Цена</div>
-                </div>
-                <div class="item-card">
-                    <div class="item-name">Название коктейля 2</div>
-                    <div class="item-description">Описание коктейля и ингредиенты</div>
-                    <div class="item-price">Цена</div>
-                </div>
-                <div class="item-card">
-                    <div class="item-name">Название коктейля 3</div>
-                    <div class="item-description">Описание коктейля и ингредиенты</div>
-                    <div class="item-price">Цена</div>
-                </div>
-            </div>
+        <!-- Контейнер для напитков -->
+        <div id="drinksContainer" class="menu-grid">
+            <div class="loading">Загрузка ассортимента...</div>
         </div>
-
-        <!-- Premium Drinks Section -->
-        <div class="items-section">
-            <h2 class="section-title">ПРЕМИАЛЬНЫЕ НАПИТКИ</h2>
-            <div class="items-grid">
-                <div class="item-card">
-                    <div class="item-name">Название напитка 1</div>
-                    <div class="item-description">Описание и характеристики напитка</div>
-                    <div class="item-price">Цена</div>
-                </div>
-                <div class="item-card">
-                    <div class="item-name">Название напитка 2</div>
-                    <div class="item-description">Описание и характеристики напитка</div>
-                    <div class="item-price">Цена</div>
-                </div>
-                <div class="item-card">
-                    <div class="item-name">Название напитка 3</div>
-                    <div class="item-description">Описание и характеристики напитка</div>
-                    <div class="item-price">Цена</div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Tapas Section -->
-        <div class="items-section">
-            <h2 class="section-title">ИСПАНСКИЕ ТАПАС</h2>
-            <div class="items-grid">
-                <div class="item-card">
-                    <div class="item-name">Название тапас 1</div>
-                    <div class="item-description">Описание закуски и ингредиенты</div>
-                    <div class="item-price">Цена</div>
-                </div>
-                <div class="item-card">
-                    <div class="item-name">Название тапас 2</div>
-                    <div class="item-description">Описание закуски и ингредиенты</div>
-                    <div class="item-price">Цена</div>
-                </div>
-                <div class="item-card">
-                    <div class="item-name">Название тапас 3</div>
-                    <div class="item-description">Описание закуски и ингредиенты</div>
-                    <div class="item-price">Цена</div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Back Button -->
-        <div style="text-align: center;">
-            <button onclick="closePage()" class="back-btn">ВЕРНУТЬСЯ НА ГЛАВНУЮ</button>
-        </div>
-    </div>
-
-    <!-- Footer -->
-    <div class="footer">
-        <p>KOLESNIKOVA STREET,13,MINSK</p>
     </div>
 
     <script>
+        // Основные переменные
+        let allDrinks = [];
+        const API_BASE = 'http://localhost:3000';
+
         // Функция для закрытия страницы
         function closePage() {
             window.close();
         }
+
+        // Функция для загрузки напитков
+        async function loadDrinks(searchTerm = '') {
+            const container = document.getElementById('drinksContainer');
+            const stats = document.getElementById('stats');
+
+            try {
+                container.innerHTML = '<div class="loading">Загрузка ассортимента...</div>';
+
+                const url = searchTerm
+                    ? `${API_BASE}/api/drinks/search?q=${encodeURIComponent(searchTerm)}`
+                    : `${API_BASE}/api/drinks`;
+
+                const response = await fetch(url);
+
+                if (!response.ok) {
+                    throw new Error(`Ошибка сервера: ${response.status}`);
+                }
+
+                const drinks = await response.json();
+                allDrinks = drinks;
+                displayDrinks(drinks);
+
+            } catch (error) {
+                console.error('Ошибка загрузки:', error);
+                container.innerHTML = `
+                    <div class="error">
+                        ❌ Ошибка загрузки данных: ${error.message}
+                        <br><br>
+                        <button onclick="loadDrinks()" class="btn search-btn">Попробовать снова</button>
+                    </div>
+                `;
+                stats.textContent = 'Ошибка загрузки';
+            }
+        }
+
+        // Функция для отображения напитков
+        function displayDrinks(drinks) {
+            const container = document.getElementById('drinksContainer');
+            const stats = document.getElementById('stats');
+
+            if (!drinks || drinks.length === 0) {
+                container.innerHTML = `
+                    <div class="empty">
+                        🍹 Напитки не найдены
+                        <br>
+                        <small>Попробуйте изменить поисковый запрос</small>
+                    </div>
+                `;
+                stats.textContent = 'Найдено: 0 напитков';
+                return;
+            }
+
+            let html = '';
+
+            drinks.forEach(drink => {
+                html += `
+                    <div class="menu-item">
+                        <div class="item-header">
+                            <div class="item-name">${escapeHtml(drink.name)}</div>
+                            <div class="item-price">${formatPrice(drink.cost)}</div>
+                        </div>
+                        <div class="item-description">
+                            ${escapeHtml(drink.compound || 'Описание отсутствует')}
+                        </div>
+                        <div class="item-ingredients">
+                            📋 Состав: ${escapeHtml(drink.compound || 'Не указан')}
+                        </div>
+                    </div>
+                `;
+            });
+
+            container.innerHTML = html;
+            stats.textContent = `Найдено: ${drinks.length} напитков`;
+        }
+
+        // Функция для поиска
+        function searchDrinks() {
+            const searchInput = document.getElementById('searchInput');
+            const searchTerm = searchInput.value.trim();
+            loadDrinks(searchTerm);
+        }
+
+        // Функция для форматирования цены
+        function formatPrice(price) {
+            if (!price) return '0 ₽';
+            return `${parseFloat(price).toFixed(2)} ₽`;
+        }
+
+        // Функция для экранирования HTML
+        function escapeHtml(unsafe) {
+            if (!unsafe) return '';
+            return unsafe
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        }
+
+        // Обработчики событий
+        document.addEventListener('DOMContentLoaded', function () {
+            // Загружаем напитки при запуске
+            loadDrinks();
+
+            // Поиск при нажатии Enter
+            document.getElementById('searchInput').addEventListener('keypress', function (e) {
+                if (e.key === 'Enter') {
+                    searchDrinks();
+                }
+            });
+
+            // Поиск при клике на кнопку
+            document.getElementById('searchBtn').addEventListener('click', searchDrinks);
+
+            // Сброс поиска при очистке поля
+            document.getElementById('searchInput').addEventListener('input', function (e) {
+                if (e.target.value === '') {
+                    loadDrinks();
+                }
+            });
+        });
+
+        // Автообновление каждые 30 секунд
+        setInterval(() => loadDrinks(), 30000);
     </script>
 </body>
+
 </html>
