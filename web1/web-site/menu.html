@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ассортимент Бара - LUMINA ESTERIA GRAND HOTEL</title>
+    <title>Меню Ресторана - LUMINA ESTERIA GRAND HOTEL</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -128,6 +128,39 @@
             outline: none;
             border-color: var(--gold);
             box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.1);
+            transform: translateY(-2px);
+        }
+
+        /* Category Filter */
+        .category-filter {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 40px;
+            flex-wrap: wrap;
+        }
+
+        .category-btn {
+            background: rgba(255, 255, 255, 0.7);
+            border: 2px solid #e8e8e8;
+            padding: 12px 25px;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: var(--transition);
+            font-weight: 500;
+            font-family: 'Inter', sans-serif;
+            backdrop-filter: blur(15px);
+        }
+
+        .category-btn.active {
+            background: var(--gradient-gold);
+            color: var(--primary-color);
+            border-color: var(--gold);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .category-btn:hover:not(.active) {
+            border-color: var(--gold);
             transform: translateY(-2px);
         }
 
@@ -257,6 +290,13 @@
             font-weight: 300;
         }
 
+        .item-weight {
+            color: var(--gold);
+            font-size: 0.9rem;
+            font-weight: 500;
+            margin-top: 10px;
+        }
+
         /* Loading and Messages */
         .loading {
             text-align: center;
@@ -328,6 +368,15 @@
             .header {
                 margin-bottom: 40px;
             }
+
+            .category-filter {
+                gap: 10px;
+            }
+
+            .category-btn {
+                padding: 10px 20px;
+                font-size: 14px;
+            }
         }
 
         /* Плавная прокрутка */
@@ -358,49 +407,70 @@
 <body>
     <div class="container">
         <div class="header">
-            <h1>🍸 АССОРТИМЕНТ БАРА</h1>
-            <p>Авторские коктейли и премиальные напитки для истинных ценителей</p>
+            <h1>🍽️ МЕНЮ РЕСТОРАНА</h1>
+            <p>Изысканные блюда международной кухни от наших шеф-поваров</p>
 
             <!-- Панель управления -->
             <div class="control-panel">
                 <div class="search-box">
                     <input type="text" id="searchInput" class="search-input"
-                        placeholder="Поиск по названию или составу...">
+                        placeholder="Поиск по названию или ингредиентам...">
                     <button id="searchBtn" class="btn search-btn">🔍 Поиск</button>
                 </div>
                 <button onclick="closePage()" class="btn back-btn">← Вернуться</button>
             </div>
 
+            <!-- Фильтр по категориям -->
+            <div class="category-filter">
+                <button class="category-btn active" data-category="all">Все блюда</button>
+                <button class="category-btn" data-category="starters">Закуски</button>
+                <button class="category-btn" data-category="soups">Супы</button>
+                <button class="category-btn" data-category="main">Основные блюда</button>
+                <button class="category-btn" data-category="desserts">Десерты</button>
+                <button class="category-btn" data-category="drinks">Напитки</button>
+            </div>
+
             <div class="stats" id="stats">Загрузка...</div>
         </div>
 
-        <!-- Контейнер для напитков -->
-        <div id="drinksContainer" class="menu-grid">
-            <div class="loading">Загрузка ассортимента...</div>
+        <!-- Контейнер для блюд -->
+        <div id="dishesContainer" class="menu-grid">
+            <div class="loading">Загрузка меню...</div>
         </div>
     </div>
 
     <script>
         // Основные переменные
-        let allDrinks = [];
+        let allDishes = [];
         const API_BASE = 'http://localhost:3000';
+        let currentCategory = 'all';
 
         // Функция для закрытия страницы
         function closePage() {
             window.close();
         }
 
-        // Функция для загрузки напитков
-        async function loadDrinks(searchTerm = '') {
-            const container = document.getElementById('drinksContainer');
+        // Функция для загрузки блюд
+        async function loadDishes(searchTerm = '', category = 'all') {
+            const container = document.getElementById('dishesContainer');
             const stats = document.getElementById('stats');
 
             try {
-                container.innerHTML = '<div class="loading">Загрузка ассортимента...</div>';
+                container.innerHTML = '<div class="loading">Загрузка меню...</div>';
 
-                const url = searchTerm
-                    ? `${API_BASE}/api/drinks/search?q=${encodeURIComponent(searchTerm)}`
-                    : `${API_BASE}/api/drinks`;
+                let url = `${API_BASE}/api/dishes`;
+                const params = new URLSearchParams();
+                
+                if (searchTerm) {
+                    params.append('q', searchTerm);
+                }
+                if (category && category !== 'all') {
+                    params.append('category', category);
+                }
+                
+                if (params.toString()) {
+                    url += `?${params.toString()}`;
+                }
 
                 const response = await fetch(url);
 
@@ -408,9 +478,9 @@
                     throw new Error(`Ошибка сервера: ${response.status}`);
                 }
 
-                const drinks = await response.json();
-                allDrinks = drinks;
-                displayDrinks(drinks);
+                const dishes = await response.json();
+                allDishes = dishes;
+                displayDishes(dishes);
 
             } catch (error) {
                 console.error('Ошибка загрузки:', error);
@@ -418,58 +488,72 @@
                     <div class="error">
                         ❌ Ошибка загрузки данных: ${error.message}
                         <br><br>
-                        <button onclick="loadDrinks()" class="btn search-btn">Попробовать снова</button>
+                        <button onclick="loadDishes()" class="btn search-btn">Попробовать снова</button>
                     </div>
                 `;
                 stats.textContent = 'Ошибка загрузки';
             }
         }
 
-        // Функция для отображения напитков
-        function displayDrinks(drinks) {
-            const container = document.getElementById('drinksContainer');
+        // Функция для отображения блюд
+        function displayDishes(dishes) {
+            const container = document.getElementById('dishesContainer');
             const stats = document.getElementById('stats');
 
-            if (!drinks || drinks.length === 0) {
+            if (!dishes || dishes.length === 0) {
                 container.innerHTML = `
                     <div class="empty">
-                        🍹 Напитки не найдены
+                        🍽️ Блюда не найдены
                         <br>
-                        <small>Попробуйте изменить поисковый запрос</small>
+                        <small>Попробуйте изменить поисковый запрос или категорию</small>
                     </div>
                 `;
-                stats.textContent = 'Найдено: 0 напитков';
+                stats.textContent = 'Найдено: 0 блюд';
                 return;
             }
 
             let html = '';
 
-            drinks.forEach(drink => {
+            dishes.forEach(dish => {
                 html += `
-                    <div class="menu-item">
+                    <div class="menu-item" data-category="${dish.category || 'other'}">
                         <div class="item-header">
-                            <div class="item-name">${escapeHtml(drink.name)}</div>
-                            <div class="item-price">${formatPrice(drink.cost)}</div>
+                            <div class="item-name">${escapeHtml(dish.name)}</div>
+                            <div class="item-price">${formatPrice(dish.price)}</div>
                         </div>
                         <div class="item-description">
-                            ${escapeHtml(drink.compound || 'Описание отсутствует')}
+                            ${escapeHtml(dish.description || 'Описание отсутствует')}
                         </div>
                         <div class="item-ingredients">
-                            📋 Состав: ${escapeHtml(drink.compound || 'Не указан')}
+                            📋 Ингредиенты: ${escapeHtml(dish.ingredients || 'Не указаны')}
                         </div>
+                        ${dish.weight ? `<div class="item-weight">⚖️ Вес: ${escapeHtml(dish.weight)}</div>` : ''}
                     </div>
                 `;
             });
 
             container.innerHTML = html;
-            stats.textContent = `Найдено: ${drinks.length} напитков`;
+            stats.textContent = `Найдено: ${dishes.length} блюд`;
         }
 
         // Функция для поиска
-        function searchDrinks() {
+        function searchDishes() {
             const searchInput = document.getElementById('searchInput');
             const searchTerm = searchInput.value.trim();
-            loadDrinks(searchTerm);
+            loadDishes(searchTerm, currentCategory);
+        }
+
+        // Функция для смены категории
+        function changeCategory(category) {
+            currentCategory = category;
+            
+            // Обновляем активную кнопку
+            document.querySelectorAll('.category-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            loadDishes(document.getElementById('searchInput').value.trim(), category);
         }
 
         // Функция для форматирования цены
@@ -491,29 +575,36 @@
 
         // Обработчики событий
         document.addEventListener('DOMContentLoaded', function () {
-            // Загружаем напитки при запуске
-            loadDrinks();
+            // Загружаем блюда при запуске
+            loadDishes();
 
             // Поиск при нажатии Enter
             document.getElementById('searchInput').addEventListener('keypress', function (e) {
                 if (e.key === 'Enter') {
-                    searchDrinks();
+                    searchDishes();
                 }
             });
 
             // Поиск при клике на кнопку
-            document.getElementById('searchBtn').addEventListener('click', searchDrinks);
+            document.getElementById('searchBtn').addEventListener('click', searchDishes);
 
             // Сброс поиска при очистке поля
             document.getElementById('searchInput').addEventListener('input', function (e) {
                 if (e.target.value === '') {
-                    loadDrinks();
+                    loadDishes('', currentCategory);
                 }
+            });
+
+            // Обработчики для кнопок категорий
+            document.querySelectorAll('.category-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    changeCategory(this.getAttribute('data-category'));
+                });
             });
         });
 
         // Автообновление каждые 30 секунд
-        setInterval(() => loadDrinks(), 30000);
+        setInterval(() => loadDishes(document.getElementById('searchInput').value.trim(), currentCategory), 30000);
     </script>
 </body>
 

@@ -1,0 +1,892 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Выбор Услуг - LUMINA ESTERIA GRAND HOTEL</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #e67e22;
+            --accent-color: #d35400;
+            --background-color: #f8f9fa;
+            --text-color: #2c3e50;
+            --text-light: #6c757d;
+            --white: #ffffff;
+            --gold: #d4af37;
+            --gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --gradient-secondary: linear-gradient(135deg, #e67e22, #d35400);
+            --gradient-gold: linear-gradient(135deg, #d4af37, #f7ef8a);
+            --shadow-sm: 0 2px 20px rgba(0,0,0,0.08);
+            --shadow-md: 0 8px 40px rgba(0,0,0,0.12);
+            --shadow-lg: 0 20px 60px rgba(0,0,0,0.15);
+            --border-radius: 16px;
+            --border-radius-lg: 24px;
+            --transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            color: var(--text-color);
+            line-height: 1.8;
+            min-height: 100vh;
+            padding: 40px 20px;
+            font-weight: 400;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .header h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 3.5rem;
+            margin-bottom: 25px;
+            color: var(--text-color);
+            font-weight: 400;
+            position: relative;
+            display: inline-block;
+            letter-spacing: 1px;
+        }
+
+        .header h1::after {
+            content: "";
+            position: absolute;
+            bottom: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 4px;
+            background: var(--gradient-gold);
+            border-radius: 2px;
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto 40px;
+            color: var(--text-light);
+            font-weight: 300;
+        }
+
+        /* Control Panel */
+        .control-panel {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+            flex-wrap: wrap;
+            gap: 25px;
+            background: rgba(255, 255, 255, 0.7);
+            padding: 25px;
+            border-radius: var(--border-radius-lg);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: var(--shadow-md);
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 16px 32px;
+            border: none;
+            border-radius: 50px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: var(--transition);
+            font-weight: 600;
+            font-family: 'Inter', sans-serif;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .back-btn {
+            background: var(--gradient-primary);
+            color: var(--white);
+            box-shadow: var(--shadow-md);
+        }
+
+        .back-btn:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .submit-btn {
+            background: var(--gradient-gold);
+            color: var(--primary-color);
+            border: none;
+            padding: 18px 45px;
+            border-radius: 50px;
+            font-size: 1.15rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            margin-top: 35px;
+            box-shadow: var(--shadow-md);
+            font-family: 'Inter', sans-serif;
+            width: 100%;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: var(--shadow-lg);
+        }
+
+        /* Selection Grid */
+        .selection-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 30px;
+            margin-bottom: 50px;
+        }
+
+        .selection-category {
+            background: rgba(255, 255, 255, 0.7);
+            border-radius: var(--border-radius-lg);
+            padding: 35px;
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+            box-shadow: var(--shadow-md);
+        }
+
+        .selection-category::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: var(--gradient-gold);
+            transform: scaleX(0);
+            transition: transform 0.4s ease;
+        }
+
+        .selection-category:hover::before {
+            transform: scaleX(1);
+        }
+
+        .selection-category:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: var(--shadow-lg);
+            background: rgba(255, 255, 255, 0.85);
+            border-color: rgba(212, 175, 55, 0.3);
+        }
+
+        .category-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .category-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+
+        .category-icon {
+            font-size: 2rem;
+            color: var(--gold);
+        }
+
+        /* Options List */
+        .options-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .option-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.5);
+            border-radius: var(--border-radius);
+            border: 2px solid #e8e8e8;
+            transition: var(--transition);
+            cursor: pointer;
+        }
+
+        .option-item:hover {
+            border-color: var(--gold);
+            transform: translateX(5px);
+        }
+
+        .option-item.selected {
+            background: var(--gradient-gold);
+            border-color: var(--gold);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .option-info {
+            flex: 1;
+        }
+
+        .option-name {
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-bottom: 5px;
+        }
+
+        .option-description {
+            color: var(--text-light);
+            font-size: 0.9rem;
+            font-weight: 300;
+        }
+
+        .option-price {
+            font-weight: 700;
+            color: var(--primary-color);
+            background: rgba(255, 255, 255, 0.7);
+            padding: 8px 16px;
+            border-radius: 20px;
+            margin-left: 15px;
+        }
+
+        .option-controls {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .quantity-control {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .quantity-btn {
+            width: 30px;
+            height: 30px;
+            border: none;
+            border-radius: 50%;
+            background: var(--gold);
+            color: var(--primary-color);
+            font-weight: bold;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .quantity-btn:hover {
+            transform: scale(1.1);
+        }
+
+        .quantity-display {
+            min-width: 30px;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        /* Summary Panel */
+        .summary-panel {
+            background: rgba(255, 255, 255, 0.7);
+            border-radius: var(--border-radius-lg);
+            padding: 35px;
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: var(--shadow-md);
+            margin-bottom: 40px;
+        }
+
+        .summary-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.8rem;
+            margin-bottom: 25px;
+            color: var(--primary-color);
+            text-align: center;
+        }
+
+        .summary-items {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .summary-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.5);
+            border-radius: var(--border-radius);
+        }
+
+        .summary-total {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            background: var(--gradient-gold);
+            border-radius: var(--border-radius);
+            font-weight: 700;
+            font-size: 1.2rem;
+            color: var(--primary-color);
+        }
+
+        /* Loading and Messages */
+        .loading {
+            text-align: center;
+            padding: 60px 40px;
+            font-size: 1.2rem;
+            color: var(--text-light);
+        }
+
+        .error {
+            text-align: center;
+            padding: 60px 40px;
+            font-size: 1.2rem;
+            color: #e74c3c;
+            background: rgba(231, 76, 60, 0.1);
+            border-radius: var(--border-radius);
+            margin: 20px 0;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .selection-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .header h1 {
+                font-size: 2.5rem;
+            }
+
+            .control-panel {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            body {
+                padding: 20px 15px;
+            }
+            
+            .header {
+                margin-bottom: 40px;
+            }
+
+            .option-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+
+            .option-controls {
+                width: 100%;
+                justify-content: space-between;
+            }
+        }
+
+        /* Плавная прокрутка */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* Кастомный скроллбар */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--background-color);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--secondary-color);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--accent-color);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎯 ВЫБОР УСЛУГ</h1>
+            <p>Завершите ваше бронирование, выбрав номер и дополнительные услуги</p>
+
+            <!-- Панель управления -->
+            <div class="control-panel">
+                <div></div> <!-- Пустой div для выравнивания -->
+                <button onclick="closePage()" class="btn back-btn">← Вернуться</button>
+            </div>
+        </div>
+
+        <!-- Сводная информация -->
+        <div class="summary-panel">
+            <h2 class="summary-title">Ваше бронирование</h2>
+            <div class="summary-items">
+                <div class="summary-item">
+                    <span>Дата заезда:</span>
+                    <strong id="checkinDate">-</strong>
+                </div>
+                <div class="summary-item">
+                    <span>Количество гостей:</span>
+                    <strong id="guestCount">-</strong>
+                </div>
+                <div class="summary-item">
+                    <span>Общая стоимость:</span>
+                    <strong id="totalCost">0 ₽</strong>
+                </div>
+            </div>
+        </div>
+
+        <!-- Контейнер для выбора услуг -->
+        <div class="selection-grid">
+            <!-- Выбор номера -->
+            <div class="selection-category">
+                <div class="category-header">
+                    <h3 class="category-title">🏨 ВЫБОР НОМЕРА</h3>
+                    <div class="category-icon">🛏️</div>
+                </div>
+                <div class="options-list" id="roomsList">
+                    <div class="loading">Загрузка номеров...</div>
+                </div>
+            </div>
+
+            <!-- Дополнительные услуги -->
+            <div class="selection-category">
+                <div class="category-header">
+                    <h3 class="category-title">⭐ ДОПОЛНИТЕЛЬНЫЕ УСЛУГИ</h3>
+                    <div class="category-icon">✨</div>
+                </div>
+                <div class="options-list" id="servicesList">
+                    <div class="loading">Загрузка услуг...</div>
+                </div>
+            </div>
+
+            <!-- Питание -->
+            <div class="selection-category">
+                <div class="category-header">
+                    <h3 class="category-title">🍽️ ВЫБОР ПИТАНИЯ</h3>
+                    <div class="category-icon">🥘</div>
+                </div>
+                <div class="options-list" id="mealsList">
+                    <div class="loading">Загрузка вариантов питания...</div>
+                </div>
+            </div>
+
+            <!-- SPA и Wellness -->
+            <div class="selection-category">
+                <div class="category-header">
+                    <h3 class="category-title">💆 SPA И WELLNESS</h3>
+                    <div class="category-icon">🧖</div>
+                </div>
+                <div class="options-list" id="spaList">
+                    <div class="loading">Загрузка SPA-услуг...</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Кнопка подтверждения -->
+        <button class="submit-btn" onclick="confirmBooking()">✅ ПОДТВЕРДИТЬ БРОНИРОВАНИЕ</button>
+    </div>
+
+    <script>
+        // Основные переменные
+        const API_BASE = 'http://localhost:3000';
+        let selectedRoom = null;
+        let selectedServices = {};
+        let selectedMeals = {};
+        let selectedSpa = {};
+
+        // Функция для закрытия страницы
+        function closePage() {
+            window.close();
+        }
+
+        // Функция для загрузки данных
+        async function loadData() {
+            try {
+                await Promise.all([
+                    loadRooms(),
+                    loadServices(),
+                    loadMeals(),
+                    loadSpaServices()
+                ]);
+                updateBookingSummary();
+            } catch (error) {
+                console.error('Ошибка загрузки данных:', error);
+                showError('Ошибка загрузки данных. Пожалуйста, обновите страницу.');
+            }
+        }
+
+        // Загрузка номеров
+        async function loadRooms() {
+            const container = document.getElementById('roomsList');
+            try {
+                const response = await fetch(`${API_BASE}/api/rooms`);
+                if (!response.ok) throw new Error('Ошибка загрузки номеров');
+                
+                const rooms = await response.json();
+                displayRooms(rooms);
+            } catch (error) {
+                container.innerHTML = `<div class="error">❌ ${error.message}</div>`;
+            }
+        }
+
+        // Загрузка услуг
+        async function loadServices() {
+            const container = document.getElementById('servicesList');
+            try {
+                const response = await fetch(`${API_BASE}/api/services`);
+                if (!response.ok) throw new Error('Ошибка загрузки услуг');
+                
+                const services = await response.json();
+                displayServices(services);
+            } catch (error) {
+                container.innerHTML = `<div class="error">❌ ${error.message}</div>`;
+            }
+        }
+
+        // Загрузка вариантов питания
+        async function loadMeals() {
+            const container = document.getElementById('mealsList');
+            try {
+                const response = await fetch(`${API_BASE}/api/meals`);
+                if (!response.ok) throw new Error('Ошибка загрузки питания');
+                
+                const meals = await response.json();
+                displayMeals(meals);
+            } catch (error) {
+                container.innerHTML = `<div class="error">❌ ${error.message}</div>`;
+            }
+        }
+
+        // Загрузка SPA-услуг
+        async function loadSpaServices() {
+            const container = document.getElementById('spaList');
+            try {
+                const response = await fetch(`${API_BASE}/api/spa`);
+                if (!response.ok) throw new Error('Ошибка загрузки SPA-услуг');
+                
+                const spaServices = await response.json();
+                displaySpaServices(spaServices);
+            } catch (error) {
+                container.innerHTML = `<div class="error">❌ ${error.message}</div>`;
+            }
+        }
+
+        // Отображение номеров
+        function displayRooms(rooms) {
+            const container = document.getElementById('roomsList');
+            let html = '';
+
+            rooms.forEach(room => {
+                html += `
+                    <div class="option-item ${selectedRoom?.id === room.id ? 'selected' : ''}" 
+                         onclick="selectRoom(${room.id})" data-room='${JSON.stringify(room)}'>
+                        <div class="option-info">
+                            <div class="option-name">${escapeHtml(room.name)}</div>
+                            <div class="option-description">${escapeHtml(room.description)}</div>
+                            <div class="option-description">💡 Площадь: ${room.area} м² | 🛏️ Мест: ${room.capacity}</div>
+                        </div>
+                        <div class="option-price">${formatPrice(room.price)}/ночь</div>
+                    </div>
+                `;
+            });
+
+            container.innerHTML = html;
+        }
+
+        // Отображение услуг
+        function displayServices(services) {
+            const container = document.getElementById('servicesList');
+            let html = '';
+
+            services.forEach(service => {
+                const quantity = selectedServices[service.id] || 0;
+                html += `
+                    <div class="option-item ${quantity > 0 ? 'selected' : ''}">
+                        <div class="option-info">
+                            <div class="option-name">${escapeHtml(service.name)}</div>
+                            <div class="option-description">${escapeHtml(service.description)}</div>
+                        </div>
+                        <div class="option-controls">
+                            <div class="option-price">${formatPrice(service.price)}</div>
+                            <div class="quantity-control">
+                                <button class="quantity-btn" onclick="decrementService(${service.id})">-</button>
+                                <span class="quantity-display">${quantity}</span>
+                                <button class="quantity-btn" onclick="incrementService(${service.id})">+</button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+
+            container.innerHTML = html;
+        }
+
+        // Отображение питания
+        function displayMeals(meals) {
+            const container = document.getElementById('mealsList');
+            let html = '';
+
+            meals.forEach(meal => {
+                const quantity = selectedMeals[meal.id] || 0;
+                html += `
+                    <div class="option-item ${quantity > 0 ? 'selected' : ''}">
+                        <div class="option-info">
+                            <div class="option-name">${escapeHtml(meal.name)}</div>
+                            <div class="option-description">${escapeHtml(meal.description)}</div>
+                        </div>
+                        <div class="option-controls">
+                            <div class="option-price">${formatPrice(meal.price)}</div>
+                            <div class="quantity-control">
+                                <button class="quantity-btn" onclick="decrementMeal(${meal.id})">-</button>
+                                <span class="quantity-display">${quantity}</span>
+                                <button class="quantity-btn" onclick="incrementMeal(${meal.id})">+</button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+
+            container.innerHTML = html;
+        }
+
+        // Отображение SPA-услуг
+        function displaySpaServices(services) {
+            const container = document.getElementById('spaList');
+            let html = '';
+
+            services.forEach(service => {
+                const quantity = selectedSpa[service.id] || 0;
+                html += `
+                    <div class="option-item ${quantity > 0 ? 'selected' : ''}">
+                        <div class="option-info">
+                            <div class="option-name">${escapeHtml(service.name)}</div>
+                            <div class="option-description">${escapeHtml(service.description)}</div>
+                            <div class="option-description">⏱️ Длительность: ${service.duration} мин</div>
+                        </div>
+                        <div class="option-controls">
+                            <div class="option-price">${formatPrice(service.price)}</div>
+                            <div class="quantity-control">
+                                <button class="quantity-btn" onclick="decrementSpa(${service.id})">-</button>
+                                <span class="quantity-display">${quantity}</span>
+                                <button class="quantity-btn" onclick="incrementSpa(${service.id})">+</button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+
+            container.innerHTML = html;
+        }
+
+        // Функции выбора
+        function selectRoom(roomId) {
+            const roomElement = document.querySelector(`[data-room]`);
+            const roomData = JSON.parse(roomElement.getAttribute('data-room'));
+            
+            selectedRoom = roomData;
+            
+            // Снимаем выделение со всех номеров
+            document.querySelectorAll('#roomsList .option-item').forEach(item => {
+                item.classList.remove('selected');
+            });
+            
+            // Выделяем выбранный номер
+            roomElement.classList.add('selected');
+            
+            updateBookingSummary();
+        }
+
+        function incrementService(serviceId) {
+            selectedServices[serviceId] = (selectedServices[serviceId] || 0) + 1;
+            updateServiceDisplay(serviceId);
+            updateBookingSummary();
+        }
+
+        function decrementService(serviceId) {
+            if (selectedServices[serviceId] > 0) {
+                selectedServices[serviceId]--;
+                updateServiceDisplay(serviceId);
+                updateBookingSummary();
+            }
+        }
+
+        function incrementMeal(mealId) {
+            selectedMeals[mealId] = (selectedMeals[mealId] || 0) + 1;
+            updateMealDisplay(mealId);
+            updateBookingSummary();
+        }
+
+        function decrementMeal(mealId) {
+            if (selectedMeals[mealId] > 0) {
+                selectedMeals[mealId]--;
+                updateMealDisplay(mealId);
+                updateBookingSummary();
+            }
+        }
+
+        function incrementSpa(serviceId) {
+            selectedSpa[serviceId] = (selectedSpa[serviceId] || 0) + 1;
+            updateSpaDisplay(serviceId);
+            updateBookingSummary();
+        }
+
+        function decrementSpa(serviceId) {
+            if (selectedSpa[serviceId] > 0) {
+                selectedSpa[serviceId]--;
+                updateSpaDisplay(serviceId);
+                updateBookingSummary();
+            }
+        }
+
+        // Обновление отображения
+        function updateServiceDisplay(serviceId) {
+            const quantity = selectedServices[serviceId] || 0;
+            const serviceElement = document.querySelector(`[onclick="decrementService(${serviceId})"]`).closest('.option-item');
+            const quantityDisplay = serviceElement.querySelector('.quantity-display');
+            
+            quantityDisplay.textContent = quantity;
+            serviceElement.classList.toggle('selected', quantity > 0);
+        }
+
+        function updateMealDisplay(mealId) {
+            const quantity = selectedMeals[mealId] || 0;
+            const mealElement = document.querySelector(`[onclick="decrementMeal(${mealId})"]`).closest('.option-item');
+            const quantityDisplay = mealElement.querySelector('.quantity-display');
+            
+            quantityDisplay.textContent = quantity;
+            mealElement.classList.toggle('selected', quantity > 0);
+        }
+
+        function updateSpaDisplay(serviceId) {
+            const quantity = selectedSpa[serviceId] || 0;
+            const spaElement = document.querySelector(`[onclick="decrementSpa(${serviceId})"]`).closest('.option-item');
+            const quantityDisplay = spaElement.querySelector('.quantity-display');
+            
+            quantityDisplay.textContent = quantity;
+            spaElement.classList.toggle('selected', quantity > 0);
+        }
+
+        // Обновление сводки
+        function updateBookingSummary() {
+            const totalCost = calculateTotalCost();
+            document.getElementById('totalCost').textContent = `${formatPrice(totalCost)}`;
+            
+            // Здесь можно добавить получение данных из формы бронирования
+            // document.getElementById('checkinDate').textContent = getCheckinDate();
+            // document.getElementById('guestCount').textContent = getGuestCount();
+        }
+
+        function calculateTotalCost() {
+            let total = 0;
+            
+            // Стоимость номера
+            if (selectedRoom) {
+                total += selectedRoom.price;
+            }
+            
+            // Стоимость услуг
+            Object.entries(selectedServices).forEach(([id, quantity]) => {
+                // Здесь нужно получить цену услуги по ID
+                total += (50 * quantity); // Примерная цена
+            });
+            
+            // Стоимость питания
+            Object.entries(selectedMeals).forEach(([id, quantity]) => {
+                total += (25 * quantity); // Примерная цена
+            });
+            
+            // Стоимость SPA
+            Object.entries(selectedSpa).forEach(([id, quantity]) => {
+                total += (75 * quantity); // Примерная цена
+            });
+            
+            return total;
+        }
+
+        // Подтверждение бронирования
+        function confirmBooking() {
+            if (!selectedRoom) {
+                alert('Пожалуйста, выберите номер для бронирования');
+                return;
+            }
+
+            const bookingData = {
+                room: selectedRoom,
+                services: selectedServices,
+                meals: selectedMeals,
+                spa: selectedSpa,
+                totalCost: calculateTotalCost(),
+                timestamp: new Date().toISOString()
+            };
+
+            // Сохраняем данные бронирования
+            localStorage.setItem('hotelBooking', JSON.stringify(bookingData));
+            
+            alert('🎉 Бронирование подтверждено! Спасибо за выбор LUMINA ESTERIA GRAND HOTEL!');
+            closePage();
+        }
+
+        // Вспомогательные функции
+        function formatPrice(price) {
+            if (!price) return '0 ₽';
+            return `${parseFloat(price).toFixed(2)} ₽`;
+        }
+
+        function escapeHtml(unsafe) {
+            if (!unsafe) return '';
+            return unsafe
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        }
+
+        function showError(message) {
+            const errorDiv = document.createElement('div');
+            errorDiv.className = 'error';
+            errorDiv.innerHTML = `❌ ${message}`;
+            document.querySelector('.container').prepend(errorDiv);
+        }
+
+        // Инициализация при загрузке
+        document.addEventListener('DOMContentLoaded', function() {
+            loadData();
+            
+            // Загружаем сохраненные данные бронирования
+            const savedBooking = localStorage.getItem('hotelBooking');
+            if (savedBooking) {
+                const booking = JSON.parse(savedBooking);
+                selectedRoom = booking.room;
+                selectedServices = booking.services || {};
+                selectedMeals = booking.meals || {};
+                selectedSpa = booking.spa || {};
+            }
+        });
+    </script>
+</body>
+
+</html>
