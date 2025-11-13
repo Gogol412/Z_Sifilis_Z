@@ -3,7 +3,6 @@ const fs = require('fs');
 const path = require('path');
 const url = require('url');
 
-// Проверяем наличие sqlite3
 let sqlite3;
 try {
     sqlite3 = require('sqlite3').verbose();
@@ -15,11 +14,9 @@ try {
 
 let db = null;
 
-// Пытаемся подключить базу данных только если sqlite3 доступен
 if (sqlite3) {
     try {
-        // Используем относительный путь
-        db = new sqlite3.Database('D:/Z_Sifilis_Z/database.db', (err) => {
+        db = new sqlite3.Database('D:/Z_Sifilis_Z/Main/database.db', (err) => {
             if (err) {
                 console.error('❌ Ошибка подключения к БД:', err.message);
                 console.log('💡 Создаем временную базу данных в памяти...');
@@ -52,9 +49,9 @@ function createDrinksTableIfNotExists() {
 
     db.run(createTableSQL, (err) => {
         if (err) {
-            console.error('❌ Ошибка создания таблицы drink:', err.message);
+            console.error('Ошибка создания таблицы drink:', err.message);
         } else {
-            console.log('✅ Таблица drink создана/проверена');
+            console.log('Таблица drink создана/проверена');
             insertSampleDrinks();
         }
     });
@@ -65,7 +62,7 @@ function insertSampleDrinks() {
 
     db.get('SELECT COUNT(*) as count FROM drink', (err, row) => {
         if (err) {
-            console.error('❌ Ошибка проверки данных:', err.message);
+            console.error('Ошибка проверки данных:', err.message);
         } else if (row.count === 0) {
             console.log('📝 Добавляем тестовые напитки...');
             const sampleDrinks = [
@@ -91,10 +88,8 @@ function insertSampleDrinks() {
     });
 }
 
-// Функция для получения напитков (с заглушкой если БД недоступна)
 function getDrinks(res) {
     if (!db) {
-        // Возвращаем тестовые данные если БД недоступна
         const testDrinks = [
             { id: 1, name: "Мохито Люмина", cost: 28.00, compound: "ром, мята, лайм, сахар, содовая" },
             { id: 2, name: "Негрони", cost: 32.00, compound: "джин, кампари, вермут" },
@@ -108,7 +103,7 @@ function getDrinks(res) {
     const sql = 'SELECT * FROM drink ORDER BY name';
     db.all(sql, [], (err, rows) => {
         if (err) {
-            console.error('❌ Ошибка SQL:', err.message);
+            console.error('Ошибка SQL:', err.message);
             res.writeHead(500, { 'Content-Type': 'application/json' });
             res.end(JSON.stringify({ error: 'Ошибка базы данных' }));
         } else {
@@ -118,10 +113,9 @@ function getDrinks(res) {
     });
 }
 
-// Функция для поиска напитков
+
 function searchDrinks(query, res) {
     if (!db) {
-        // Заглушка для поиска без БД
         getDrinks(res);
         return;
     }
@@ -147,13 +141,12 @@ function searchDrinks(query, res) {
     });
 }
 
-// Функция для обслуживания файлов
 function serveFile(filename, contentType, res) {
     const filePath = path.join(__dirname, filename);
 
     fs.readFile(filePath, (err, content) => {
         if (err) {
-            console.error(`❌ Ошибка чтения файла ${filename}:`, err.message);
+            console.error(`Ошибка чтения файла ${filename}:`, err.message);
             res.writeHead(404);
             res.end('Файл не найден');
         } else {
@@ -163,75 +156,65 @@ function serveFile(filename, contentType, res) {
     });
 }
 
-// Создаем сервер
 const server = http.createServer((req, res) => {
     const parsedUrl = url.parse(req.url, true);
     const pathname = parsedUrl.pathname;
 
-    // CORS headers
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
     res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
 
-    // Обработка preflight запросов
     if (req.method === 'OPTIONS') {
         res.writeHead(200);
         res.end();
         return;
     }
 
-    // API для получения напитков
     if (pathname === '/api/drinks' && req.method === 'GET') {
         getDrinks(res);
         return;
     }
 
-    // API для поиска напитков
     if (pathname === '/api/drinks/search' && req.method === 'GET') {
         const query = parsedUrl.query.q;
         searchDrinks(query, res);
         return;
     }
 
-    // Главная страница
-    if (pathname === '/' || pathname === '/2str.html') {
-        serveFile('2str.html', 'text/html', res);
+    if (pathname === '/' || pathname === '/trpoMain.html') {
+        serveFile('trpoMain.html', 'text/html', res);
         return;
     }
 
-    // Страница ассортимента
     if (pathname === '/assortiment.html') {
         serveFile('assortiment.html', 'text/html', res);
         return;
     }
 
-    // 404 для остальных запросов
     res.writeHead(404, { 'Content-Type': 'text/html' });
     res.end('<h1>404 - Страница не найдена</h1>');
 });
 
-// Запуск сервера
 const PORT = 3000;
 server.listen(PORT, () => {
     console.log('='.repeat(50));
-    console.log('🚀 СЕРВЕР ОТЕЛЯ ЗАПУЩЕН!');
+    console.log('СЕРВЕР ОТЕЛЯ ЗАПУЩЕН!');
     console.log('='.repeat(50));
-    console.log(`🏨 Главная страница: http://localhost:${PORT}`);
-    console.log(`🍸 Ассортимент: http://localhost:${PORT}/assortiment.html`);
-    console.log(`📊 API напитков: http://localhost:${PORT}/api/drinks`);
-    console.log(`💾 База данных: ${db ? 'подключена' : 'не доступна'}`);
+    console.log(`Главная страница: http://localhost:${PORT}`);
+    console.log(`Ассортимент: http://localhost:${PORT}/assortiment.html`);
+    console.log(`API напитков: http://localhost:${PORT}/api/drinks`);
+    console.log(`База данных: ${db ? 'подключена' : 'не доступна'}`);
     console.log('='.repeat(50));
 });
 
-// Graceful shutdown
 process.on('SIGINT', () => {
-    console.log('\n🛑 Выключение сервера...');
+    console.log('\n Выключение сервера...');
     if (db) {
         db.close((err) => {
             if (err) {
                 console.error('Ошибка закрытия БД:', err.message);
             } else {
-                console.log('✅ База данных закрыта');
+                console.log('База данных закрыта');
             }
             process.exit(0);
         });
