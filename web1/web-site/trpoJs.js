@@ -294,28 +294,6 @@ class BookingManager {
                 this.handleReservationSubmit(e);
             });
         }
-
-        // Обработчик кнопки паспортных данных
-        const passportToggle = document.querySelector('.passport-toggle');
-        const passportFields = document.querySelector('.passport-fields');
-        
-        if (passportToggle && passportFields) {
-            passportToggle.addEventListener('click', function() {
-                passportFields.classList.toggle('active');
-                
-                // Меняем текст кнопки
-                const currentLang = localStorage.getItem('hotelLang') || 'ru';
-                if (passportFields.classList.contains('active')) {
-                    this.textContent = currentLang === 'ru' 
-                        ? '− СКРЫТЬ ПАСПОРТНЫЕ ДАННЫЕ' 
-                        : '− HIDE PASSPORT DETAILS';
-                } else {
-                    this.textContent = currentLang === 'ru' 
-                        ? '+ ДОБАВИТЬ ПАСПОРТНЫЕ ДАННЫЕ' 
-                        : '+ ADD PASSPORT DETAILS';
-                }
-            });
-        }
     }
 
     handleReservationSubmit(e) {
