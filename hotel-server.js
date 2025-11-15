@@ -16,7 +16,7 @@ let db = null;
 
 if (sqlite3) {
     try {
-        db = new sqlite3.Database('D:/Z_Sifilis_Z/Main/database.db', (err) => {
+        db = new sqlite3.Database('D:/Z_Sifilis_Z/Back/database.db', (err) => {
             if (err) {
                 console.error('❌ Ошибка подключения к БД:', err.message);
                 console.log('💡 Создаем временную базу данных в памяти...');
@@ -169,25 +169,38 @@ const server = http.createServer((req, res) => {
         res.end();
         return;
     }
-
     if (pathname === '/api/drinks' && req.method === 'GET') {
         getDrinks(res);
         return;
     }
-
     if (pathname === '/api/drinks/search' && req.method === 'GET') {
         const query = parsedUrl.query.q;
         searchDrinks(query, res);
         return;
     }
 
-    if (pathname === '/' || pathname === '/trpoMain.html') {
-        serveFile('trpoMain.html', 'text/html', res);
+    if (pathname === 'D:/Z_Sifilis_Z/Main/' || pathname === 'D:/Z_Sifilis_Z/Main/trpoMain.html') {
+        serveFile('D:/Z_Sifilis_Z/Main/trpoMain.html', 'text/html', res);
         return;
     }
-
-    if (pathname === '/assortiment.html') {
-        serveFile('assortiment.html', 'text/html', res);
+    if (pathname === 'D:/Z_Sifilis_Z/Main/assortiment.html') {
+        serveFile('D:/Z_Sifilis_Z/Main/assortiment.html', 'text/html', res);
+        return;
+    }
+    if (pathname === 'D:/Z_Sifilis_Z/Main/booking-selection.html') {
+        serveFile('D:/Z_Sifilis_Z/Main/booking-selection.html', 'text/html', res);
+        return;
+    }
+    if (pathname === 'D:/Z_Sifilis_Z/Main/menu.html') {
+        serveFile('D:/Z_Sifilis_Z/Main/menu.html', 'text/html', res);
+        return;
+    }
+    if (pathname === 'D:/Z_Sifilis_Z/Main/trpoCss.css') {
+        serveFile('D:/Z_Sifilis_Z/Main/trpoCss.css', 'text/css', res);
+        return;
+    }
+    if (pathname === 'D:/Z_Sifilis_Z/Main/trpoJs.js') {
+        serveFile('D:/Z_Sifilis_Z/Main/trpoJs.js', 'text/js', res);
         return;
     }
 
@@ -195,14 +208,12 @@ const server = http.createServer((req, res) => {
     res.end('<h1>404 - Страница не найдена</h1>');
 });
 
-const PORT = 3000;
+const PORT = 8001;
 server.listen(PORT, () => {
     console.log('='.repeat(50));
     console.log('СЕРВЕР ОТЕЛЯ ЗАПУЩЕН!');
     console.log('='.repeat(50));
     console.log(`Главная страница: http://localhost:${PORT}`);
-    console.log(`Ассортимент: http://localhost:${PORT}/assortiment.html`);
-    console.log(`API напитков: http://localhost:${PORT}/api/drinks`);
     console.log(`База данных: ${db ? 'подключена' : 'не доступна'}`);
     console.log('='.repeat(50));
 });
