@@ -7,7 +7,7 @@
     "test": "test"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node D:/Z_Sifilis_/Main/hotel_server.js"
   },
   "keywords": [],
   "author": "",
