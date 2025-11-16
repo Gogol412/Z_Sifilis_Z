@@ -5,7 +5,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Выбор Услуг - LUMINA ESTERIA GRAND HOTEL</title>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
     <style>
         :root {
             --primary-color: #2c3e50;
@@ -19,9 +21,9 @@
             --gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             --gradient-secondary: linear-gradient(135deg, #e67e22, #d35400);
             --gradient-gold: linear-gradient(135deg, #d4af37, #f7ef8a);
-            --shadow-sm: 0 2px 20px rgba(0,0,0,0.08);
-            --shadow-md: 0 8px 40px rgba(0,0,0,0.12);
-            --shadow-lg: 0 20px 60px rgba(0,0,0,0.15);
+            --shadow-sm: 0 2px 20px rgba(0, 0, 0, 0.08);
+            --shadow-md: 0 8px 40px rgba(0, 0, 0, 0.12);
+            --shadow-lg: 0 20px 60px rgba(0, 0, 0, 0.15);
             --border-radius: 16px;
             --border-radius-lg: 24px;
             --transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
@@ -148,183 +150,6 @@
         .submit-btn:hover {
             transform: translateY(-3px) scale(1.05);
             box-shadow: var(--shadow-lg);
-        }
-
-        /* Guest Counter */
-        .guest-counter {
-            background: rgba(255, 255, 255, 0.7);
-            border-radius: var(--border-radius-lg);
-            padding: 30px;
-            backdrop-filter: blur(15px);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            box-shadow: var(--shadow-md);
-            margin-bottom: 40px;
-        }
-
-        .guest-counter-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 25px;
-        }
-
-        .guest-counter-title {
-            font-family: 'Playfair Display', serif;
-            font-size: 1.8rem;
-            font-weight: 600;
-            color: var(--primary-color);
-        }
-
-        .guest-counter-icon {
-            font-size: 2rem;
-            color: var(--gold);
-        }
-
-        .guest-controls {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 30px;
-            padding: 20px;
-        }
-
-        .guest-btn {
-            width: 50px;
-            height: 50px;
-            border: none;
-            border-radius: 50%;
-            background: var(--gradient-gold);
-            color: var(--primary-color);
-            font-size: 1.5rem;
-            font-weight: bold;
-            cursor: pointer;
-            transition: var(--transition);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .guest-btn:hover {
-            transform: scale(1.1);
-            box-shadow: var(--shadow-md);
-        }
-
-        .guest-btn:disabled {
-            background: #cccccc;
-            cursor: not-allowed;
-            transform: none;
-            box-shadow: none;
-        }
-
-        .guest-display {
-            font-size: 2.5rem;
-            font-weight: 700;
-            color: var(--primary-color);
-            min-width: 80px;
-            text-align: center;
-        }
-
-        .guest-label {
-            text-align: center;
-            color: var(--text-light);
-            font-size: 1rem;
-            margin-top: 10px;
-        }
-
-        /* Passport Section */
-        .passport-section {
-            background: rgba(255, 255, 255, 0.7);
-            border-radius: var(--border-radius-lg);
-            padding: 30px;
-            backdrop-filter: blur(15px);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            box-shadow: var(--shadow-md);
-            margin-bottom: 40px;
-        }
-
-        .passport-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 25px;
-            cursor: pointer;
-        }
-
-        .passport-title {
-            font-family: 'Playfair Display', serif;
-            font-size: 1.8rem;
-            font-weight: 600;
-            color: var(--primary-color);
-        }
-
-        .passport-icon {
-            font-size: 2rem;
-            color: var(--gold);
-            transition: var(--transition);
-        }
-
-        .passport-fields {
-            display: none;
-            gap: 20px;
-            margin-top: 25px;
-            padding: 25px;
-            background: rgba(255, 255, 255, 0.5);
-            border-radius: var(--border-radius);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            animation: slideDown 0.4s ease-out;
-        }
-
-        .passport-fields.active {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-        }
-
-        .passport-row {
-            display: contents;
-        }
-
-        .form-group {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-
-        .form-group label {
-            font-weight: 600;
-            color: var(--text-color);
-            font-size: 0.9rem;
-        }
-
-        .form-group input {
-            padding: 12px 16px;
-            border: 2px solid #e8e8e8;
-            border-radius: var(--border-radius);
-            font-size: 1rem;
-            transition: var(--transition);
-            background: var(--white);
-            font-family: 'Inter', sans-serif;
-        }
-
-        .form-group input:focus {
-            outline: none;
-            border-color: var(--gold);
-            box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.1);
-        }
-
-        .form-group.full-width {
-            grid-column: 1 / -1;
-        }
-
-        @keyframes slideDown {
-            from {
-                opacity: 0;
-                transform: translateY(-15px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
         }
 
         /* Selection Grid */
@@ -557,11 +382,11 @@
                 flex-direction: column;
                 align-items: stretch;
             }
-            
+
             body {
                 padding: 20px 15px;
             }
-            
+
             .header {
                 margin-bottom: 40px;
             }
@@ -575,28 +400,6 @@
             .option-controls {
                 width: 100%;
                 justify-content: space-between;
-            }
-
-            .guest-controls {
-                gap: 20px;
-            }
-
-            .guest-btn {
-                width: 45px;
-                height: 45px;
-                font-size: 1.3rem;
-            }
-
-            .guest-display {
-                font-size: 2rem;
-            }
-
-            .passport-fields.active {
-                grid-template-columns: 1fr;
-            }
-
-            .form-group.full-width {
-                grid-column: 1;
             }
         }
 
@@ -638,50 +441,6 @@
             </div>
         </div>
 
-        <!-- Счетчик гостей -->
-        <div class="guest-counter">
-            <div class="guest-counter-header">
-                <h3 class="guest-counter-title">👥 ВЫБЕРИТЕ КОЛИЧЕСТВО ГОСТЕЙ</h3>
-                <div class="guest-counter-icon">👨‍👩‍👧‍👦</div>
-            </div>
-            <div class="guest-controls">
-                <button class="guest-btn" onclick="changeGuests(-1)" id="decreaseGuests">-</button>
-                <div class="guest-display" id="guestCount">2</div>
-                <button class="guest-btn" onclick="changeGuests(1)" id="increaseGuests">+</button>
-            </div>
-            <div class="guest-label">Взрослые гости (от 12 лет)</div>
-        </div>
-
-        <!-- Паспортные данные -->
-        <div class="passport-section">
-            <div class="passport-header" onclick="togglePassportFields()">
-                <h3 class="passport-title">📄 ПАСПОРТНЫЕ ДАННЫЕ</h3>
-                <div class="passport-icon" id="passportIcon">⬇️</div>
-            </div>
-            <div class="passport-fields" id="passportFields">
-                <div class="form-group">
-                    <label for="passport-series">Серия паспорта</label>
-                    <input type="text" id="passport-series" name="passport_series" placeholder="AB" maxlength="2">
-                </div>
-                <div class="form-group">
-                    <label for="passport-number">Номер паспорта</label>
-                    <input type="text" id="passport-number" name="passport_number" placeholder="1234567" maxlength="7">
-                </div>
-                <div class="form-group full-width">
-                    <label for="passport-issued">Кем выдан</label>
-                    <input type="text" id="passport-issued" name="passport_issued" placeholder="ОВД города Минска">
-                </div>
-                <div class="form-group">
-                    <label for="passport-date">Дата выдачи</label>
-                    <input type="date" id="passport-date" name="passport_date">
-                </div>
-                <div class="form-group">
-                    <label for="passport-birthdate">Дата рождения</label>
-                    <input type="date" id="passport-birthdate" name="passport_birthdate">
-                </div>
-            </div>
-        </div>
-
         <!-- Сводная информация -->
         <div class="summary-panel">
             <h2 class="summary-title">Ваше бронирование</h2>
@@ -692,9 +451,13 @@
                 </div>
                 <div class="summary-item">
                     <span>Количество гостей:</span>
-                    <strong id="summaryGuestCount">2</strong>
+                    <strong id="guestCount">-</strong>
                 </div>
-                <div class="summary-item">
+                <div class="summary-item" id="selectedRoomItem" style="display: none;">
+                    <span>Выбранный номер:</span>
+                    <strong id="selectedRoomName">-</strong>
+                </div>
+                <div class="summary-total">
                     <span>Общая стоимость:</span>
                     <strong id="totalCost">0 ₽</strong>
                 </div>
@@ -759,102 +522,30 @@
         let selectedServices = {};
         let selectedMeals = {};
         let selectedSpa = {};
-        let guestCount = 2; // Начальное количество гостей
-        const MAX_GUESTS = 8;
-        const MIN_GUESTS = 1;
-        let passportFieldsVisible = false;
 
         // Функция для закрытия страницы
         function closePage() {
             window.close();
         }
 
-        // Функция для переключения паспортных данных
-        function togglePassportFields() {
-            const passportFields = document.getElementById('passportFields');
-            const passportIcon = document.getElementById('passportIcon');
-            
-            passportFieldsVisible = !passportFieldsVisible;
-            passportFields.classList.toggle('active', passportFieldsVisible);
-            passportIcon.textContent = passportFieldsVisible ? '⬆️' : '⬇️';
-        }
-
-        // Функция для изменения количества гостей
-        function changeGuests(change) {
-            const newCount = guestCount + change;
-            
-            if (newCount >= MIN_GUESTS && newCount <= MAX_GUESTS) {
-                guestCount = newCount;
-                updateGuestDisplay();
-                updateBookingSummary();
-                validateRoomCapacity();
-            }
-        }
-
-        // Обновление отображения счетчика гостей
-        function updateGuestDisplay() {
-            document.getElementById('guestCount').textContent = guestCount;
-            document.getElementById('summaryGuestCount').textContent = guestCount;
-            
-            // Обновляем состояние кнопок
-            document.getElementById('decreaseGuests').disabled = guestCount <= MIN_GUESTS;
-            document.getElementById('increaseGuests').disabled = guestCount >= MAX_GUESTS;
-        }
-
-        // Проверка вместимости выбранного номера
-        function validateRoomCapacity() {
-            if (selectedRoom && guestCount > selectedRoom.capacity) {
-                alert(`⚠️ Внимание! Выбранный номер вмещает только ${selectedRoom.capacity} гостей. Пожалуйста, выберите другой номер или уменьшите количество гостей.`);
-                // Автоматически снимаем выбор номера, если он не подходит
-                selectedRoom = null;
-                document.querySelectorAll('#roomsList .option-item').forEach(item => {
-                    item.classList.remove('selected');
-                });
-                updateBookingSummary();
-            }
-        }
-
         // Функция для загрузки данных
         async function loadData() {
             try {
+                console.log('Загрузка данных бронирования...');
+                const reservationData = getReservationData();
+                console.log('Данные из localStorage:', reservationData);
+
                 await Promise.all([
                     loadRooms(),
                     loadServices(),
                     loadMeals(),
                     loadSpaServices()
                 ]);
-                updateGuestDisplay();
                 updateBookingSummary();
-                loadPassportData();
             } catch (error) {
                 console.error('Ошибка загрузки данных:', error);
                 showError('Ошибка загрузки данных. Пожалуйста, обновите страницу.');
             }
-        }
-
-        // Загрузка сохраненных паспортных данных
-        function loadPassportData() {
-            const savedPassport = localStorage.getItem('hotelPassportData');
-            if (savedPassport) {
-                const passportData = JSON.parse(savedPassport);
-                document.getElementById('passport-series').value = passportData.series || '';
-                document.getElementById('passport-number').value = passportData.number || '';
-                document.getElementById('passport-issued').value = passportData.issued || '';
-                document.getElementById('passport-date').value = passportData.date || '';
-                document.getElementById('passport-birthdate').value = passportData.birthdate || '';
-            }
-        }
-
-        // Сохранение паспортных данных
-        function savePassportData() {
-            const passportData = {
-                series: document.getElementById('passport-series').value,
-                number: document.getElementById('passport-number').value,
-                issued: document.getElementById('passport-issued').value,
-                date: document.getElementById('passport-date').value,
-                birthdate: document.getElementById('passport-birthdate').value
-            };
-            localStorage.setItem('hotelPassportData', JSON.stringify(passportData));
         }
 
         // Загрузка номеров
@@ -863,10 +554,12 @@
             try {
                 const response = await fetch(`${API_BASE}/api/rooms`);
                 if (!response.ok) throw new Error('Ошибка загрузки номеров');
-                
+
                 const rooms = await response.json();
+                console.log('Загруженные номера:', rooms); // Отладочный вывод
                 displayRooms(rooms);
             } catch (error) {
+                console.error('Ошибка:', error);
                 container.innerHTML = `<div class="error">❌ ${error.message}</div>`;
             }
         }
@@ -877,7 +570,7 @@
             try {
                 const response = await fetch(`${API_BASE}/api/services`);
                 if (!response.ok) throw new Error('Ошибка загрузки услуг');
-                
+
                 const services = await response.json();
                 displayServices(services);
             } catch (error) {
@@ -891,7 +584,7 @@
             try {
                 const response = await fetch(`${API_BASE}/api/meals`);
                 if (!response.ok) throw new Error('Ошибка загрузки питания');
-                
+
                 const meals = await response.json();
                 displayMeals(meals);
             } catch (error) {
@@ -905,7 +598,7 @@
             try {
                 const response = await fetch(`${API_BASE}/api/spa`);
                 if (!response.ok) throw new Error('Ошибка загрузки SPA-услуг');
-                
+
                 const spaServices = await response.json();
                 displaySpaServices(spaServices);
             } catch (error) {
@@ -913,36 +606,35 @@
             }
         }
 
-        // Отображение номеров
         function displayRooms(rooms) {
             const container = document.getElementById('roomsList');
+
+            if (!rooms || rooms.length === 0) {
+                container.innerHTML = '<div class="error">❌ Нет доступных номеров</div>';
+                return;
+            }
+
             let html = '';
 
             rooms.forEach(room => {
-                const isCapacityValid = guestCount <= room.capacity;
-                const capacityWarning = !isCapacityValid ? 'style="opacity: 0.6;"' : '';
-                
+                const isSelected = selectedRoom && selectedRoom.id === room.id;
+
                 html += `
-                    <div class="option-item ${selectedRoom?.id === room.id ? 'selected' : ''} ${!isCapacityValid ? 'disabled' : ''}" 
-                         ${capacityWarning}
-                         onclick="${isCapacityValid ? `selectRoom(${room.id})` : ''}" 
-                         data-room='${JSON.stringify(room)}'>
+                    <div class="option-item ${isSelected ? 'selected' : ''}" 
+                        onclick="selectRoom(this)" 
+                        data-room='${JSON.stringify(room).replace(/'/g, "&apos;")}'>
                         <div class="option-info">
-                            <div class="option-name">${escapeHtml(room.name)} ${!isCapacityValid ? '🚫' : ''}</div>
-                            <div class="option-description">${escapeHtml(room.description)}</div>
-                            <div class="option-description">
-                                💡 Площадь: ${room.area} м² | 🛏️ Мест: ${room.capacity}
-                                ${!isCapacityValid ? '<br><span style="color: #e74c3c;">⚠️ Недостаточно мест для выбранного количества гостей</span>' : ''}
-                            </div>
+                            <div class="option-name">Номер ${room.room_number} - ${escapeHtml(room.room_type_name)}</div>
+                            <div class="option-description">🏠 Тип: ${escapeHtml(room.room_type_name)}</div>
+                            <div class="option-description">🛏️ Вместимость: ${room.capacity} гостей</div>
                         </div>
-                        <div class="option-price">${formatPrice(room.price)}/ночь</div>
+                        <div class="option-price">${formatPrice(room.current_price)}/ночь</div>
                     </div>
                 `;
             });
 
             container.innerHTML = html;
         }
-
         // Отображение услуг
         function displayServices(services) {
             const container = document.getElementById('servicesList');
@@ -985,7 +677,7 @@
                             <div class="option-description">${escapeHtml(meal.description)}</div>
                         </div>
                         <div class="option-controls">
-                            <div class="option-price">${formatPrice(meal.price * guestCount)}</div>
+                            <div class="option-price">${formatPrice(meal.price)}</div>
                             <div class="quantity-control">
                                 <button class="quantity-btn" onclick="decrementMeal(${meal.id})">-</button>
                                 <span class="quantity-display">${quantity}</span>
@@ -1029,23 +721,35 @@
         }
 
         // Функции выбора
-        function selectRoom(roomId) {
-            const roomElement = document.querySelector(`[data-room='${JSON.stringify(selectedRoom)}']`);
-            if (roomElement) {
-                roomElement.classList.remove('selected');
-            }
-            
-            const newRoomElement = document.querySelector(`[onclick="selectRoom(${roomId})"]`);
-            const roomData = JSON.parse(newRoomElement.getAttribute('data-room'));
-            
-            // Проверяем вместимость
-            if (guestCount > roomData.capacity) {
-                alert(`⚠️ Этот номер вмещает только ${roomData.capacity} гостей. Пожалуйста, уменьшите количество гостей или выберите другой номер.`);
+        function selectRoom(clickedElement) {
+            // Получаем элемент, по которому кликнули
+            const roomElement = clickedElement.closest('.option-item');
+
+            if (!roomElement) {
+                console.error('Не удалось найти элемент номера');
                 return;
             }
-            
-            selectedRoom = roomData;
-            newRoomElement.classList.add('selected');
+
+            // Получаем данные номера
+            const roomData = JSON.parse(roomElement.getAttribute('data-room'));
+
+            // Если кликаем на уже выбранный номер - снимаем выбор
+            if (selectedRoom && selectedRoom.id === roomData.id) {
+                selectedRoom = null;
+                roomElement.classList.remove('selected');
+            } else {
+                // Выбираем новый номер
+                selectedRoom = roomData;
+
+                // Снимаем выделение со всех номеров
+                document.querySelectorAll('#roomsList .option-item').forEach(item => {
+                    item.classList.remove('selected');
+                });
+
+                // Выделяем выбранный номер
+                roomElement.classList.add('selected');
+            }
+
             updateBookingSummary();
         }
 
@@ -1096,7 +800,7 @@
             const quantity = selectedServices[serviceId] || 0;
             const serviceElement = document.querySelector(`[onclick="decrementService(${serviceId})"]`).closest('.option-item');
             const quantityDisplay = serviceElement.querySelector('.quantity-display');
-            
+
             quantityDisplay.textContent = quantity;
             serviceElement.classList.toggle('selected', quantity > 0);
         }
@@ -1105,7 +809,7 @@
             const quantity = selectedMeals[mealId] || 0;
             const mealElement = document.querySelector(`[onclick="decrementMeal(${mealId})"]`).closest('.option-item');
             const quantityDisplay = mealElement.querySelector('.quantity-display');
-            
+
             quantityDisplay.textContent = quantity;
             mealElement.classList.toggle('selected', quantity > 0);
         }
@@ -1114,82 +818,176 @@
             const quantity = selectedSpa[serviceId] || 0;
             const spaElement = document.querySelector(`[onclick="decrementSpa(${serviceId})"]`).closest('.option-item');
             const quantityDisplay = spaElement.querySelector('.quantity-display');
-            
+
             quantityDisplay.textContent = quantity;
             spaElement.classList.toggle('selected', quantity > 0);
         }
 
-        // Обновление сводки
         function updateBookingSummary() {
+            const reservationData = getReservationData();
             const totalCost = calculateTotalCost();
+
+            document.getElementById('checkinDate').textContent = reservationData.date ?
+                formatDisplayDate(reservationData.date) : '-';
+            document.getElementById('guestCount').textContent = reservationData.guests || '-';
             document.getElementById('totalCost').textContent = `${formatPrice(totalCost)}`;
-            document.getElementById('summaryGuestCount').textContent = guestCount;
+
+            const roomItem = document.getElementById('selectedRoomItem');
+            const roomName = document.getElementById('selectedRoomName');
+
+            if (selectedRoom) {
+                if (roomItem) roomItem.style.display = 'flex';
+                if (roomName) roomName.textContent = `Номер ${selectedRoom.room_number} - ${selectedRoom.room_type_name}`;
+            } else if (roomItem) {
+                roomItem.style.display = 'none';
+            }
         }
+
+        function getReservationData() {
+            const savedData = localStorage.getItem('hotelBookingData');
+            if (savedData) {
+                const data = JSON.parse(savedData);
+                return data.reservation || {};
+            }
+            return {};
+        }
+
+        function formatDisplayDate(dateString) {
+            if (!dateString) return '-';
+
+            const date = new Date(dateString);
+            const options = {
+                day: 'numeric',
+                month: 'long',
+                year: 'numeric',
+                weekday: 'long'
+            };
+
+            return date.toLocaleDateString('ru-RU', options);
+        }
+
 
         function calculateTotalCost() {
             let total = 0;
-            
-            // Стоимость номера (умножаем на количество гостей, если цена за человека)
+
+            // Стоимость номера
             if (selectedRoom) {
-                total += selectedRoom.price * guestCount;
+                total += parseFloat(selectedRoom.current_price) || 0;
             }
-            
+
             // Стоимость услуг
             Object.entries(selectedServices).forEach(([id, quantity]) => {
                 total += (50 * quantity); // Примерная цена
             });
-            
-            // Стоимость питания (умножаем на количество гостей)
+
+            // Стоимость питания
             Object.entries(selectedMeals).forEach(([id, quantity]) => {
-                total += (25 * quantity * guestCount); // Примерная цена
+                total += (25 * quantity); // Примерная цена
             });
-            
+
             // Стоимость SPA
             Object.entries(selectedSpa).forEach(([id, quantity]) => {
                 total += (75 * quantity); // Примерная цена
             });
-            
+
             return total;
         }
 
-        // Подтверждение бронирования
-        function confirmBooking() {
+        async function confirmBooking() {
             if (!selectedRoom) {
                 alert('Пожалуйста, выберите номер для бронирования');
                 return;
             }
-
-            // Проверяем вместимость номера
-            if (guestCount > selectedRoom.capacity) {
-                alert(`⚠️ Выбранный номер вмещает только ${selectedRoom.capacity} гостей. Пожалуйста, выберите другой номер или уменьшите количество гостей.`);
-                return;
-            }
-
-            // Сохраняем паспортные данные
-            savePassportData();
 
             const bookingData = {
                 room: selectedRoom,
                 services: selectedServices,
                 meals: selectedMeals,
                 spa: selectedSpa,
-                guestCount: guestCount,
-                passportData: {
-                    series: document.getElementById('passport-series').value,
-                    number: document.getElementById('passport-number').value,
-                    issued: document.getElementById('passport-issued').value,
-                    date: document.getElementById('passport-date').value,
-                    birthdate: document.getElementById('passport-birthdate').value
-                },
                 totalCost: calculateTotalCost(),
                 timestamp: new Date().toISOString()
             };
 
-            // Сохраняем данные бронирования
-            localStorage.setItem('hotelBooking', JSON.stringify(bookingData));
-            
-            alert(`🎉 Бронирование подтверждено для ${guestCount} гостей! Спасибо за выбор LUMINA ESTERIA GRAND HOTEL!`);
-            closePage();
+            try {
+                // Проверяем, доступен ли BookingManager
+                if (typeof BookingManager === 'undefined') {
+                    // Если нет, используем прямой fetch запрос
+                    await saveBookingDirectly(bookingData);
+                } else {
+                    // Используем BookingManager если доступен
+                    const bookingManager = new BookingManager();
+                    await bookingManager.confirmFinalBooking(bookingData);
+                }
+
+                // Очищаем localStorage после успешного сохранения
+                localStorage.removeItem('hotelBooking');
+                localStorage.removeItem('hotelBookingData');
+
+                // Показываем сообщение об успехе
+                alert('🎉 Бронирование успешно подтверждено!');
+
+                // Закрываем окно
+                closePage();
+            } catch (error) {
+                console.error('Ошибка при подтверждении бронирования:', error);
+                alert('❌ Ошибка бронирования, повторите позже');
+            }
+        }
+
+        async function saveBookingDirectly(selectionData) {
+            try {
+                // Получаем данные из localStorage
+                const reservationData = getReservationData();
+
+                // Формируем полные данные для сохранения
+                const fullBookingData = {
+                    bookingNumber: generateBookingNumber(),
+                    room: selectionData.room,
+                    guestInfo: {
+                        name: reservationData.name || '',
+                        lastname: reservationData.lastname || '',
+                        surname: reservationData.surname || '',
+                        phone: reservationData.phone || '',
+                        email: reservationData.email || ''
+                    },
+                    checkinDate: reservationData.date || new Date().toISOString().split('T')[0],
+                    guestCount: reservationData.guests || '1',
+                    totalCost: selectionData.totalCost,
+                    services: selectionData.services,
+                    meals: selectionData.meals,
+                    spa: selectionData.spa,
+                    passportInfo: {
+                        series: reservationData.passport_series || '',
+                        number: reservationData.passport_number || '',
+                        issuedBy: reservationData.passport_issued || '',
+                        issueDate: reservationData.passport_date || ''
+                    }
+                };
+
+                // Сохраняем в базу данных
+                const response = await fetch('http://localhost:3000/api/bookings', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(fullBookingData)
+                });
+
+                if (!response.ok) {
+                    throw new Error('Ошибка сервера при сохранении бронирования');
+                }
+
+                const result = await response.json();
+                return result;
+
+            } catch (error) {
+                console.error('Ошибка сохранения бронирования:', error);
+                throw error;
+            }
+        }
+
+        function generateBookingNumber() {
+            return 'BK-' + Date.now() + '-' + Math.random().toString(36).substr(2, 5).toUpperCase();
         }
 
         // Вспомогательные функции
@@ -1216,9 +1014,9 @@
         }
 
         // Инициализация при загрузке
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             loadData();
-            
+
             // Загружаем сохраненные данные бронирования
             const savedBooking = localStorage.getItem('hotelBooking');
             if (savedBooking) {
@@ -1227,15 +1025,11 @@
                 selectedServices = booking.services || {};
                 selectedMeals = booking.meals || {};
                 selectedSpa = booking.spa || {};
-                guestCount = booking.guestCount || 2;
             }
-
-            // Автосохранение паспортных данных при изменении
-            document.querySelectorAll('#passportFields input').forEach(input => {
-                input.addEventListener('input', savePassportData);
-            });
         });
     </script>
+
+    <script src="trpoJs.js"></script>
 </body>
 
 </html>

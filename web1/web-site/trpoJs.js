@@ -29,7 +29,7 @@ class LanguageSwitcher {
         this.removeCurrentNotification();
 
         this.currentLang = lang;
-        
+
         // Обновляем активную кнопку
         document.querySelectorAll('.language-btn').forEach(btn => {
             btn.classList.toggle('active', btn.dataset.lang === lang);
@@ -65,10 +65,10 @@ class LanguageSwitcher {
         // Создаем уведомление
         const notification = document.createElement('div');
         notification.className = 'language-notification show';
-        notification.textContent = lang === 'ru' 
-            ? 'Язык изменен на русский' 
+        notification.textContent = lang === 'ru'
+            ? 'Язык изменен на русский'
             : 'Language switched to English';
-        
+
         document.body.appendChild(notification);
         this.currentNotification = notification;
 
@@ -89,6 +89,7 @@ class LanguageSwitcher {
 
 // Класс для управления якорными ссылками
 class AnchorNavigation {
+
     constructor() {
         this.sections = [];
         this.anchorLinks = [];
@@ -102,10 +103,16 @@ class AnchorNavigation {
     }
 
     createAnchorNavigation() {
+
+        if (window.location.pathname.includes('booking-selection.html') ||
+            document.getElementById('roomsList')) {
+            return; // Не создаем якорные ссылки на странице бронирования
+        }
+
         // Создаем контейнер для якорных ссылок
         const anchorContainer = document.createElement('div');
         anchorContainer.className = 'anchor-links';
-        
+
         // Секции для навигации
         const sections = [
             { id: 'about-contacts', nameRu: 'История', nameEn: 'History' },
@@ -120,16 +127,16 @@ class AnchorNavigation {
             anchorLink.href = `#${section.id}`;
             anchorLink.className = 'anchor-link';
             anchorLink.setAttribute('data-section', section.id);
-            
+
             const tooltip = document.createElement('span');
             tooltip.className = 'anchor-tooltip';
             tooltip.setAttribute('data-ru', section.nameRu);
             tooltip.setAttribute('data-en', section.nameEn);
             tooltip.textContent = section.nameRu;
-            
+
             anchorLink.appendChild(tooltip);
             anchorContainer.appendChild(anchorLink);
-            
+
             this.anchorLinks.push(anchorLink);
         });
 
@@ -199,7 +206,7 @@ class AnchorNavigation {
 
     updateActiveAnchor() {
         const scrollPosition = window.pageYOffset + 100;
-        
+
         this.anchorLinks.forEach(link => {
             link.classList.remove('active', 'pulse');
         });
@@ -207,13 +214,13 @@ class AnchorNavigation {
         // Находим активную секцию
         let currentSection = '';
         const sections = ['about-contacts', 'hotel', 'restaurant', 'bar', 'reservation'];
-        
+
         sections.forEach(sectionId => {
             const section = document.getElementById(sectionId);
             if (section) {
                 const sectionTop = section.offsetTop;
                 const sectionHeight = section.clientHeight;
-                
+
                 if (scrollPosition >= sectionTop && scrollPosition < sectionTop + sectionHeight) {
                     currentSection = sectionId;
                 }
@@ -255,7 +262,7 @@ class AnchorNavigation {
         document.querySelectorAll('.anchor-tooltip').forEach(tooltip => {
             tooltip.textContent = tooltip.getAttribute(`data-${currentLang}`);
         });
-        
+
         const backToTop = document.getElementById('backToTop');
         if (backToTop) {
             backToTop.title = backToTop.getAttribute(`data-${currentLang}`);
@@ -273,8 +280,106 @@ class BookingManager {
     init() {
         this.loadBookingData();
         this.setupEventListeners();
+        this.setupDateValidation(); // Добавляем валидацию даты
     }
 
+    // Добавляем метод для настройки валидации даты
+    setupDateValidation() {
+        const dateInput = document.getElementById('date');
+        if (dateInput) {
+            // Устанавливаем минимальную дату (сегодня)
+            const today = new Date().toISOString().split('T')[0];
+            dateInput.setAttribute('min', today);
+
+            // Добавляем обработчик изменения даты
+            dateInput.addEventListener('change', () => {
+                this.validateDate(dateInput);
+            });
+        }
+    }
+
+    // Метод валидации даты
+    validateDate(dateInput) {
+        const selectedDate = new Date(dateInput.value);
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+
+        if (selectedDate < today) {
+            this.showDateError('❌ Нельзя выбрать прошедшую дату! Пожалуйста, выберите дату сегодня или позже.');
+            dateInput.style.borderColor = '#e74c3c';
+            return false;
+        } else {
+            this.hideDateError();
+            dateInput.style.borderColor = '#27ae60';
+            return true;
+        }
+    }
+
+    // Показ ошибки даты
+    showDateError(message) {
+        let errorElement = document.querySelector('.date-error');
+        if (!errorElement) {
+            errorElement = document.createElement('div');
+            errorElement.className = 'error-message date-error';
+            document.getElementById('date').parentNode.appendChild(errorElement);
+        }
+        errorElement.textContent = message;
+        errorElement.style.display = 'block';
+    }
+
+    hideDateError() {
+        const errorElement = document.querySelector('.date-error');
+        if (errorElement) {
+            errorElement.style.display = 'none';
+        }
+    }
+
+    // Обновляем обработчик отправки формы
+    handleReservationSubmit(e) {
+        e.preventDefault();
+
+        // Валидация даты
+        const dateInput = document.getElementById('date');
+        if (!this.validateDate(dateInput)) {
+            return false;
+        }
+
+        const formData = new FormData(e.target);
+        const reservationData = Object.fromEntries(formData);
+
+        // Добавляем количество гостей, если поле отсутствует
+        if (!reservationData.guests) {
+            reservationData.guests = '1';
+        }
+
+        console.log('Сохранение данных бронирования:', reservationData); // Добавьте эту строку для отладки
+
+        // Сохраняем данные формы
+        this.bookingData.reservation = reservationData;
+        this.saveBookingData();
+
+        // Открываем страницу выбора услуг
+        this.openBookingSelection();
+
+        return false;
+    }
+
+    // Добавляем метод для форматирования даты
+    static formatDisplayDate(dateString) {
+        if (!dateString) return '-';
+
+        const date = new Date(dateString);
+        const options = {
+            day: 'numeric',
+            month: 'long',
+            year: 'numeric',
+            weekday: 'long'
+        };
+
+        return date.toLocaleDateString('ru-RU', options);
+    }
+
+    // Остальные существующие методы остаются без изменений
     loadBookingData() {
         const savedData = localStorage.getItem('hotelBookingData');
         if (savedData) {
@@ -294,20 +399,49 @@ class BookingManager {
                 this.handleReservationSubmit(e);
             });
         }
+
+        // Обработчик кнопки паспортных данных
+        const passportToggle = document.querySelector('.passport-toggle');
+        const passportFields = document.querySelector('.passport-fields');
+
+        if (passportToggle && passportFields) {
+            passportToggle.addEventListener('click', function () {
+                passportFields.classList.toggle('active');
+
+                // Меняем текст кнопки
+                const currentLang = localStorage.getItem('hotelLang') || 'ru';
+                if (passportFields.classList.contains('active')) {
+                    this.textContent = currentLang === 'ru'
+                        ? '− СКРЫТЬ ПАСПОРТНЫЕ ДАННЫЕ'
+                        : '− HIDE PASSPORT DETAILS';
+                } else {
+                    this.textContent = currentLang === 'ru'
+                        ? '+ ДОБАВИТЬ ПАСПОРТНЫЕ ДАННЫЕ'
+                        : '+ ADD PASSPORT DETAILS';
+                }
+            });
+        }
+
+        // Добавляем поле для количества гостей, если его нет
+        this.addGuestsField();
     }
 
-    handleReservationSubmit(e) {
-        e.preventDefault();
-        
-        const formData = new FormData(e.target);
-        const reservationData = Object.fromEntries(formData);
-        
-        // Сохраняем данные формы
-        this.bookingData.reservation = reservationData;
-        this.saveBookingData();
-        
-        // Открываем страницу выбора услуг
-        this.openBookingSelection();
+    // Метод для добавления поля количества гостей
+    addGuestsField() {
+        if (!document.getElementById('guests')) {
+            const dateGroup = document.querySelector('.form-group:has(#date)');
+            if (dateGroup) {
+                const currentLang = localStorage.getItem('hotelLang') || 'ru';
+                const labelText = currentLang === 'ru' ? 'КОЛИЧЕСТВО ГОСТЕЙ' : 'NUMBER OF GUESTS';
+                const guestsHtml = `
+                    <div class="form-group">
+                        <label for="guests">${labelText}</label>
+                        <input type="number" id="guests" name="guests" min="1" max="10" value="1" required>
+                    </div>
+                `;
+                dateGroup.insertAdjacentHTML('afterend', guestsHtml);
+            }
+        }
     }
 
     openBookingSelection() {
@@ -316,16 +450,79 @@ class BookingManager {
         window.open('booking-selection.html', 'bookingSelection', features);
     }
 
-    // Метод для подтверждения финального бронирования
-    confirmFinalBooking(selectionData) {
-        this.bookingData.selection = selectionData;
-        this.bookingData.confirmedAt = new Date().toISOString();
-        this.bookingData.bookingNumber = this.generateBookingNumber();
-        
-        this.saveBookingData();
-        
-        // Показываем подтверждение
-        this.showConfirmation();
+    async saveBookingToServer(bookingData) {
+        try {
+            const response = await fetch('http://localhost:3000/api/bookings', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(bookingData)
+            });
+
+            if (!response.ok) {
+                throw new Error('Ошибка сервера при сохранении бронирования');
+            }
+
+            const result = await response.json();
+            return result;
+        } catch (error) {
+            console.error('Ошибка сохранения бронирования:', error);
+            throw error;
+        }
+    }
+
+    async confirmFinalBooking(selectionData) {
+        try {
+            // Получаем данные из формы
+            const reservationData = this.bookingData.reservation;
+
+            // Формируем полные данные для сохранения
+            const fullBookingData = {
+                bookingNumber: this.generateBookingNumber(),
+                room: selectionData.room,
+                guestInfo: {
+                    name: reservationData.name,
+                    lastname: reservationData.lastname,
+                    surname: reservationData.surname,
+                    phone: reservationData.phone,
+                    email: reservationData.email
+                },
+                checkinDate: reservationData.date,
+                guestCount: reservationData.guests || '1',
+                totalCost: selectionData.totalCost,
+                services: selectionData.services,
+                meals: selectionData.meals,
+                spa: selectionData.spa,
+                passportInfo: {
+                    series: reservationData.passport_series,
+                    number: reservationData.passport_number,
+                    issuedBy: reservationData.passport_issued,
+                    issueDate: reservationData.passport_date
+                }
+            };
+
+            // Сохраняем в базу данных
+            const saveResult = await this.saveBookingToServer(fullBookingData);
+
+            // Обновляем локальные данные
+            this.bookingData.selection = selectionData;
+            this.bookingData.confirmedAt = new Date().toISOString();
+            this.bookingData.bookingNumber = fullBookingData.bookingNumber;
+            this.bookingData.serverId = saveResult.bookingId;
+
+            this.saveBookingData();
+
+            // Показываем подтверждение
+            this.showConfirmation(saveResult.bookingNumber);
+
+            return saveResult;
+
+        } catch (error) {
+            console.error('Ошибка подтверждения бронирования:', error);
+            this.showError('Произошла ошибка при сохранении бронирования. Пожалуйста, попробуйте еще раз.');
+            throw error;
+        }
     }
 
     generateBookingNumber() {
@@ -334,11 +531,15 @@ class BookingManager {
 
     showConfirmation() {
         const currentLang = localStorage.getItem('hotelLang') || 'ru';
-        const message = currentLang === 'ru' 
-            ? `🎉 Бронирование #${this.bookingData.bookingNumber} подтверждено! Мы отправили детали на вашу почту.` 
+        const message = currentLang === 'ru'
+            ? `🎉 Бронирование #${this.bookingData.bookingNumber} подтверждено! Мы отправили детали на вашу почту.`
             : `🎉 Booking #${this.bookingData.bookingNumber} confirmed! We have sent details to your email.`;
-        
+
         alert(message);
+    }
+
+    showError(message) {
+        alert(`❌ ${message}`);
     }
 }
 
@@ -430,7 +631,7 @@ class ButtonManager {
                             block: 'start'
                         });
                     }
-                    
+
                     // Закрываем мобильное меню после клика
                     const navLinks = document.querySelector('.nav-links');
                     if (navLinks && navLinks.classList.contains('active')) {
@@ -463,7 +664,7 @@ class HotelApp {
 
         // Настраиваем связи между компонентами
         this.setupComponentConnections();
-        
+
         console.log('LUMINA ESTERIA GRAND HOTEL app initialized');
     }
 
@@ -525,7 +726,7 @@ function showNotification(message, type = 'info') {
     const notification = document.createElement('div');
     notification.className = `notification ${type}`;
     notification.textContent = message;
-    
+
     // Стили для уведомления
     notification.style.cssText = `
         position: fixed;
@@ -540,14 +741,14 @@ function showNotification(message, type = 'info') {
         transform: translateX(100%);
         transition: transform 0.3s ease;
     `;
-    
+
     document.body.appendChild(notification);
-    
+
     // Анимация появления
     setTimeout(() => {
         notification.style.transform = 'translateX(0)';
     }, 100);
-    
+
     // Автоматическое скрытие
     setTimeout(() => {
         notification.style.transform = 'translateX(100%)';

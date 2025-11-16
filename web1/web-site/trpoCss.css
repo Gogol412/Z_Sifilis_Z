@@ -12,9 +12,9 @@
     --gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     --gradient-secondary: linear-gradient(135deg, #e67e22, #d35400);
     --gradient-gold: linear-gradient(135deg, #d4af37, #f7ef8a);
-    --shadow-sm: 0 2px 20px rgba(0,0,0,0.08);
-    --shadow-md: 0 8px 40px rgba(0,0,0,0.12);
-    --shadow-lg: 0 20px 60px rgba(0,0,0,0.15);
+    --shadow-sm: 0 2px 20px rgba(0, 0, 0, 0.08);
+    --shadow-md: 0 8px 40px rgba(0, 0, 0, 0.12);
+    --shadow-lg: 0 20px 60px rgba(0, 0, 0, 0.15);
     --border-radius: 16px;
     --border-radius-lg: 24px;
     --transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
@@ -71,7 +71,7 @@ body {
 .language-switcher {
     display: flex;
     gap: 6px;
-    background: rgba(255,255,255,0.15);
+    background: rgba(255, 255, 255, 0.15);
     padding: 4px;
     border-radius: 10px;
     backdrop-filter: blur(10px);
@@ -96,18 +96,18 @@ body {
 }
 
 .language-btn:hover:not(.active) {
-    background: rgba(255,255,255,0.2);
+    background: rgba(255, 255, 255, 0.2);
 }
 
 /* Navigation */
 nav {
-    background: rgba(255,255,255,0.95);
+    background: rgba(255, 255, 255, 0.95);
     box-shadow: var(--shadow-md);
     position: sticky;
     top: 0;
     z-index: 1000;
     backdrop-filter: blur(20px);
-    border-bottom: 1px solid rgba(255,255,255,0.2);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 .nav-container {
@@ -203,8 +203,8 @@ nav {
 /* Hero Section */
 .hero {
     height: 100vh;
-    background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.7)), 
-               url('https://images.unsplash.com/photo-1566073771259-6a8506099945?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80');
+    background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.7)),
+        url('https://images.unsplash.com/photo-1566073771259-6a8506099945?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80');
     background-size: cover;
     background-position: center;
     background-attachment: fixed;
@@ -234,7 +234,7 @@ nav {
     margin-bottom: 30px;
     font-weight: 400;
     letter-spacing: 3px;
-    text-shadow: 2px 2px 15px rgba(0,0,0,0.4);
+    text-shadow: 2px 2px 15px rgba(0, 0, 0, 0.4);
     animation: fadeInUp 1s ease-out;
     line-height: 1.1;
 }
@@ -255,6 +255,7 @@ nav {
         opacity: 0;
         transform: translateY(40px);
     }
+
     to {
         opacity: 1;
         transform: translateY(0);
@@ -334,10 +335,10 @@ nav {
 /* АНИМАЦИЯ ДЛЯ ABOUT CONTENT */
 .about-content {
     padding: 60px;
-    background: rgba(255,255,255,0.12);
+    background: rgba(255, 255, 255, 0.12);
     border-radius: var(--border-radius-lg);
     backdrop-filter: blur(25px);
-    border: 1px solid rgba(255,255,255,0.25);
+    border: 1px solid rgba(255, 255, 255, 0.25);
     transition: var(--transition);
     position: relative;
     overflow: hidden;
@@ -350,7 +351,7 @@ nav {
     left: -100%;
     width: 100%;
     height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
     transition: left 0.6s ease;
 }
 
@@ -361,7 +362,7 @@ nav {
 .about-content:hover {
     transform: translateY(-10px);
     box-shadow: var(--shadow-lg);
-    border-color: rgba(255,255,255,0.4);
+    border-color: rgba(255, 255, 255, 0.4);
 }
 
 .about-content h3 {
@@ -398,11 +399,11 @@ nav {
 
 /* АНИМАЦИЯ ДЛЯ CONTACT ITEMS */
 .contact-item {
-    background: rgba(255,255,255,0.12);
+    background: rgba(255, 255, 255, 0.12);
     padding: 45px;
     border-radius: var(--border-radius-lg);
     backdrop-filter: blur(25px);
-    border: 1px solid rgba(255,255,255,0.25);
+    border: 1px solid rgba(255, 255, 255, 0.25);
     transition: var(--transition);
     position: relative;
     overflow: hidden;
@@ -427,7 +428,7 @@ nav {
 .contact-item:hover {
     transform: translateX(15px) scale(1.02);
     box-shadow: var(--shadow-lg);
-    border-color: rgba(255,255,255,0.4);
+    border-color: rgba(255, 255, 255, 0.4);
 }
 
 .contact-item h3 {
@@ -475,7 +476,7 @@ nav {
     padding: 60px 50px;
     border-radius: var(--border-radius-lg);
     box-shadow: var(--shadow-md);
-    border: 1px solid rgba(0,0,0,0.08);
+    border: 1px solid rgba(0, 0, 0, 0.08);
     position: relative;
     overflow: hidden;
     transition: var(--transition);
@@ -550,8 +551,8 @@ nav {
 
 /* Restaurant Section */
 .restaurant-section {
-    background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.8)),
-               url('https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80');
+    background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.8)),
+        url('https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80');
     background-size: cover;
     background-position: center;
     background-attachment: fixed;
@@ -567,11 +568,11 @@ nav {
 .restaurant-content {
     max-width: 900px;
     margin: 0 auto;
-    background: rgba(255,255,255,0.12);
+    background: rgba(255, 255, 255, 0.12);
     padding: 70px;
     border-radius: var(--border-radius-lg);
     backdrop-filter: blur(25px);
-    border: 1px solid rgba(255,255,255,0.25);
+    border: 1px solid rgba(255, 255, 255, 0.25);
     transition: var(--transition);
     position: relative;
     overflow: hidden;
@@ -584,7 +585,7 @@ nav {
     left: 0;
     width: 100%;
     height: 100%;
-    background: linear-gradient(transparent, rgba(255,255,255,0.1), transparent);
+    background: linear-gradient(transparent, rgba(255, 255, 255, 0.1), transparent);
     transition: top 0.6s ease;
 }
 
@@ -595,7 +596,7 @@ nav {
 .restaurant-content:hover {
     transform: scale(1.02);
     box-shadow: var(--shadow-lg);
-    border-color: rgba(255,255,255,0.4);
+    border-color: rgba(255, 255, 255, 0.4);
 }
 
 .restaurant-content p {
@@ -614,8 +615,8 @@ nav {
 
 /* Bar Section */
 .bar-section {
-    background: linear-gradient(rgba(0,0,0,0.75), rgba(0,0,0,0.85)),
-               url('https://images.unsplash.com/photo-1572116469696-31de0f17cc34?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80');
+    background: linear-gradient(rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0.85)),
+        url('https://images.unsplash.com/photo-1572116469696-31de0f17cc34?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80');
     background-size: cover;
     background-position: center;
     background-attachment: fixed;
@@ -630,11 +631,11 @@ nav {
 .bar-content {
     max-width: 900px;
     margin: 0 auto;
-    background: rgba(255,255,255,0.12);
+    background: rgba(255, 255, 255, 0.12);
     padding: 70px;
     border-radius: var(--border-radius-lg);
     backdrop-filter: blur(25px);
-    border: 1px solid rgba(255,255,255,0.25);
+    border: 1px solid rgba(255, 255, 255, 0.25);
     transition: var(--transition);
     position: relative;
     overflow: hidden;
@@ -647,7 +648,7 @@ nav {
     left: 0;
     width: 100%;
     height: 100%;
-    background: linear-gradient(transparent, rgba(255,255,255,0.1), transparent);
+    background: linear-gradient(transparent, rgba(255, 255, 255, 0.1), transparent);
     transition: bottom 0.6s ease;
 }
 
@@ -658,7 +659,7 @@ nav {
 .bar-content:hover {
     transform: scale(1.02);
     box-shadow: var(--shadow-lg);
-    border-color: rgba(255,255,255,0.4);
+    border-color: rgba(255, 255, 255, 0.4);
 }
 
 .bar-content p {
@@ -676,7 +677,8 @@ nav {
 }
 
 /* Кнопки */
-.assortment-btn, .menu-btn {
+.assortment-btn,
+.menu-btn {
     display: inline-flex;
     align-items: center;
     gap: 15px;
@@ -696,22 +698,25 @@ nav {
     overflow: hidden;
 }
 
-.assortment-btn::before, .menu-btn::before {
+.assortment-btn::before,
+.menu-btn::before {
     content: '';
     position: absolute;
     top: 0;
     left: -100%;
     width: 100%;
     height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
     transition: left 0.5s ease;
 }
 
-.assortment-btn:hover::before, .menu-btn:hover::before {
+.assortment-btn:hover::before,
+.menu-btn:hover::before {
     left: 100%;
 }
 
-.assortment-btn:hover, .menu-btn:hover {
+.assortment-btn:hover,
+.menu-btn:hover {
     transform: translateY(-3px) scale(1.05);
     box-shadow: var(--shadow-lg);
 }
@@ -928,6 +933,7 @@ nav {
         opacity: 0;
         transform: translateY(-15px);
     }
+
     to {
         opacity: 1;
         transform: translateY(0);
@@ -972,7 +978,7 @@ nav {
     left: -100%;
     width: 100%;
     height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
     transition: left 0.5s ease;
 }
 
@@ -1036,7 +1042,7 @@ nav {
     opacity: 0;
     transform: translateX(100px);
     backdrop-filter: blur(15px);
-    border: 1px solid rgba(255,255,255,0.2);
+    border: 1px solid rgba(255, 255, 255, 0.2);
     font-family: 'Inter', sans-serif;
 }
 
@@ -1051,24 +1057,24 @@ nav {
         flex-wrap: wrap;
         gap: 25px;
     }
-    
+
     .logo {
         font-size: 28px;
     }
-    
+
     .nav-links {
         gap: 25px;
     }
-    
+
     .nav-link {
         padding: 10px 20px;
         font-size: 15px;
     }
-    
+
     .hero-content h1 {
         font-size: 4rem;
     }
-    
+
     .section-title {
         font-size: 3.2rem;
     }
@@ -1107,7 +1113,7 @@ nav {
         padding: 10px 20px;
         font-size: 15px;
     }
-    
+
     .section-title {
         font-size: 2.2rem;
     }
@@ -1148,11 +1154,11 @@ nav {
         padding: 16px 32px;
         font-size: 1rem;
     }
-    
+
     .section {
         padding: 80px 20px;
     }
-    
+
     .about-content,
     .restaurant-content,
     .bar-content {
@@ -1174,12 +1180,12 @@ nav {
         gap: 15px;
         z-index: 1002;
     }
-    
+
     .nav-links.active {
         display: flex;
         animation: slideDown 0.3s ease-out;
     }
-    
+
     .reservation-btn {
         text-align: center;
         margin-top: 15px;
@@ -1364,9 +1370,11 @@ html {
     0% {
         box-shadow: 0 0 0 0 rgba(212, 175, 55, 0.4);
     }
+
     70% {
         box-shadow: 0 0 0 10px rgba(212, 175, 55, 0);
     }
+
     100% {
         box-shadow: 0 0 0 0 rgba(212, 175, 55, 0);
     }
@@ -1383,16 +1391,16 @@ html {
         padding: 15px 8px;
         gap: 12px;
     }
-    
+
     .anchor-link {
         width: 10px;
         height: 10px;
     }
-    
+
     .anchor-tooltip {
         display: none;
     }
-    
+
     .back-to-top {
         bottom: 20px;
         right: 20px;
@@ -1408,6 +1416,7 @@ html {
         opacity: 0;
         transform: translateX(50px) translateY(-50%);
     }
+
     to {
         opacity: 1;
         transform: translateX(0) translateY(-50%);
@@ -1416,4 +1425,28 @@ html {
 
 .anchor-links {
     animation: fadeInRight 0.6s ease-out;
+}
+
+input:invalid {
+    border-color: #e74c3c;
+    box-shadow: 0 0 5px rgba(231, 76, 60, 0.3);
+}
+
+input:valid {
+    border-color: #27ae60;
+}
+
+.form-group {
+    position: relative;
+}
+
+.error-message {
+    color: #e74c3c;
+    font-size: 0.8rem;
+    margin-top: 5px;
+    display: none;
+}
+
+.date-error {
+    display: block;
 }
