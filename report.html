@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Генерация отчета по бронированиям</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 15px;
+            padding: 40px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 500px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 10px;
+            font-size: 24px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #7f8c8d;
+            margin-bottom: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #34495e;
+            font-weight: bold;
+        }
+
+        input[type="date"] {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        input[type="date"]:focus {
+            outline: none;
+            border-color: #3498db;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s;
+            margin-top: 10px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(52, 152, 219, 0.3);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .info-box {
+            background: #f8f9fa;
+            border-left: 4px solid #3498db;
+            padding: 15px;
+            margin-top: 20px;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .info-box h3 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+
+        .info-box ul {
+            padding-left: 20px;
+            color: #7f8c8d;
+        }
+
+        .info-box li {
+            margin-bottom: 5px;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 25px;
+            }
+
+            h1 {
+                font-size: 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>📊 Генерация отчета</h1>
+        <p class="subtitle">Выберите период для генерации отчета в TXT формате</p>
+
+        <form id="reportForm">
+            <div class="form-group">
+                <label for="start_date">Дата начала:</label>
+                <input type="date" id="start_date" name="start_date" required>
+            </div>
+
+            <div class="form-group">
+                <label for="end_date">Дата окончания:</label>
+                <input type="date" id="end_date" name="end_date" required>
+            </div>
+
+            <button type="button" class="btn" onclick="generateReport()">
+                📥 Сгенерировать отчет (TXT)
+            </button>
+        </form>
+
+        <div class="info-box">
+            <h3>Информация:</h3>
+            <ul>
+                <li>Отчет будет содержать все бронирования за указанный период</li>
+                <li>Данные загружаются из базы данных SQLite</li>
+                <li>Файл скачается автоматически</li>
+                <li>Формат файла: TXT (текстовый)</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        // Устанавливаем сегодняшнюю дату как дату окончания
+        document.getElementById('end_date').value = new Date().toISOString().split('T')[0];
+
+        // Устанавливаем дату начала - 30 дней назад
+        const startDate = new Date();
+        startDate.setDate(startDate.getDate() - 30);
+        document.getElementById('start_date').value = startDate.toISOString().split('T')[0];
+
+        function generateReport() {
+            const startDate = document.getElementById('start_date').value;
+            const endDate = document.getElementById('end_date').value;
+
+            if (!startDate || !endDate) {
+                alert('Пожалуйста, выберите обе даты');
+                return;
+            }
+
+            if (startDate > endDate) {
+                alert('Дата начала не может быть позже даты окончания');
+                return;
+            }
+
+            // Показываем сообщение о начале генерации
+            const btn = document.querySelector('.btn');
+            const originalText = btn.textContent;
+            btn.textContent = '⏳ Генерация отчета...';
+            btn.disabled = true;
+
+            // Формируем URL для запроса
+            const url = `http://localhost:3000/api/report/txt?start_date=${startDate}&end_date=${endDate}`;
+
+            // Открываем в новой вкладке для скачивания файла
+            const link = document.createElement('a');
+            link.href = url;
+            link.target = '_blank';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+
+            // Восстанавливаем кнопку через 3 секунды
+            setTimeout(() => {
+                btn.textContent = originalText;
+                btn.disabled = false;
+                alert('Отчет успешно сгенерирован!\nФайл скачается автоматически.');
+            }, 3000);
+        }
+
+        // Проверяем доступность сервера при загрузке
+        window.addEventListener('load', function () {
+            fetch('http://localhost:3000/api/bookings')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Сервер не отвечает');
+                    }
+                    console.log('✅ Сервер доступен');
+                })
+                .catch(error => {
+                    alert('⚠️ Внимание: Сервер отеля не запущен!\n\nЗапустите server.js и обновите страницу.');
+                    document.querySelector('.btn').disabled = true;
+                    document.querySelector('.btn').textContent = '⚠️ Сервер недоступен';
+                });
+        });
+    </script>
+</body>
+
+</html>

@@ -63,7 +63,6 @@ function checkTableStructure() {
             console.log(`  - ${col.name} (${col.type})`);
         });
 
-        // Проверяем наличие обязательных столбцов
         const requiredColumns = ['checkout_date', 'guest_count', 'total_price'];
         const missingColumns = requiredColumns.filter(col =>
             !columns.some(c => c.name === col)
@@ -103,8 +102,6 @@ function checkTableStructure() {
     });
 }
 
-// Вызовите эту функцию после подключения к БД
-// Добавьте в блок подключения к БД:
 if (db) {
     db.get("SELECT name FROM sqlite_master WHERE type='table' AND name='Bookings'", (err, row) => {
         if (err) {
@@ -177,7 +174,6 @@ function getAvailableRooms(req, res, query) {
 
     console.log(`🔍 Поиск номеров: ${checkin} - ${checkout}, гостей: ${guests}`);
 
-    // ИСПРАВЛЕННЫЙ SQL-запрос: правильно проверяем пересечение периодов
     const sql = `
         SELECT 
             r.id,
@@ -228,7 +224,6 @@ function getAvailableRooms(req, res, query) {
 function findAlternativeOptions(checkin, checkout, guests, res) {
     console.log(`🔍 Поиск альтернативных вариантов для: ${checkin} - ${checkout}, гостей: ${guests}`);
 
-    // Вариант 1: Найти ближайшую доступную дату заезда ПОСЛЕ указанной даты
     const findNextDateSQL = `
         SELECT 
             b.checkout_date as next_available_date,
@@ -250,7 +245,6 @@ function findAlternativeOptions(checkin, checkout, guests, res) {
         LIMIT 3
     `;
 
-    // Вариант 2: Найти последнюю дату выезда ПЕРЕД указанной датой
     const findPreviousDateSQL = `
         SELECT 
             b.checkin_date as previous_checkin_date,
@@ -273,7 +267,6 @@ function findAlternativeOptions(checkin, checkout, guests, res) {
         LIMIT 3
     `;
 
-    // Вариант 3: Поиск номеров другого типа (большей вместимости)
     const alternativeRoomsSQL = `
         SELECT 
             r.id,
@@ -293,7 +286,6 @@ function findAlternativeOptions(checkin, checkout, guests, res) {
         ORDER BY rt.capacity, r.room_number
     `;
 
-    // Выполняем все запросы параллельно
     db.all(findNextDateSQL, [guests, checkin], (err, nextDates) => {
         if (err) {
             console.error('Ошибка поиска следующих дат:', err);
@@ -314,7 +306,6 @@ function findAlternativeOptions(checkin, checkout, guests, res) {
 
                 const suggestions = [];
 
-                // Добавляем предложения по датам ПОСЛЕ
                 if (nextDates && nextDates.length > 0) {
                     nextDates.forEach(date => {
                         suggestions.push({
@@ -329,7 +320,6 @@ function findAlternativeOptions(checkin, checkout, guests, res) {
                     });
                 }
 
-                // Добавляем предложения по датам ДО
                 if (previousDates && previousDates.length > 0) {
                     previousDates.forEach(date => {
                         suggestions.push({
@@ -344,7 +334,6 @@ function findAlternativeOptions(checkin, checkout, guests, res) {
                     });
                 }
 
-                // Добавляем предложение по другим типам номеров
                 if (altRooms && altRooms.length > 0) {
                     suggestions.push({
                         type: 'different_room_type',
@@ -353,7 +342,6 @@ function findAlternativeOptions(checkin, checkout, guests, res) {
                     });
                 }
 
-                // Если вообще нет никаких предложений
                 if (suggestions.length === 0) {
                     suggestions.push({
                         type: 'no_options',
@@ -529,7 +517,6 @@ function saveBooking(bookingData, res) {
 
     console.log('📦 Получены данные для бронирования:', JSON.stringify(bookingData, null, 2));
 
-    // 1. Сначала проверяем доступность номера
     const checkAvailabilitySQL = `
         SELECT COUNT(*) as count 
         FROM Bookings 
@@ -570,7 +557,6 @@ function saveBooking(bookingData, res) {
         if (!isAvailable) {
             console.log(`❌ Номер ${bookingData.room?.id} занят на ${bookingData.checkinDate} - ${bookingData.checkoutDate}`);
 
-            // Ищем альтернативные даты для этого номера
             const altDatesSQL = `
                 SELECT 
                     b.checkout_date as next_available_date,
@@ -596,7 +582,6 @@ function saveBooking(bookingData, res) {
                     alternativeDates = [];
                 }
 
-                // Ищем другие свободные номера на эти даты
                 const altRoomsSQL = `
                     SELECT 
                         r.id,
@@ -655,7 +640,6 @@ function saveBooking(bookingData, res) {
             return;
         }
 
-        // 2. Если номер свободен - сохраняем бронирование
         const insertSQL = `
             INSERT INTO Bookings (
                 booking_number, room_id, guest_name, guest_lastname,
@@ -742,30 +726,7 @@ function getBookings(res) {
     });
 }
 
-function checkAvailability(data, res) {
-    const { checkin_date, checkout_date, guest_count } = data;
 
-    const sql = `
-        SELECT r.*
-        FROM Room r
-        JOIN Room_types rt ON rt.id = r.room_type_id
-        WHERE rt.capacity >= ?
-        AND r.id NOT IN (
-            SELECT room_id FROM Bookings
-            WHERE checkin_date < ?
-            AND checkout_date > ?
-        )
-    `;
-
-    db.all(sql, [guest_count, checkout_date, checkin_date], (err, rooms) => {
-        if (rooms.length > 0) {
-            res.end(JSON.stringify({ availableRooms: rooms }));
-        } else {
-            // ищем альтернативы
-            findNextAvailableDate(guest_count, checkin_date, res);
-        }
-    });
-}
 
 function findNextAvailableDate(checkin, guests, res) {
     const sql = `
@@ -788,6 +749,212 @@ function findNextAvailableDate(checkin, guests, res) {
     });
 }
 
+// Функция для генерации отчета в TXT формате
+function generateTxtReport(query, res) {
+    if (!db) {
+        res.writeHead(500, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ error: 'База данных не доступна' }));
+        return;
+    }
+
+    const { start_date, end_date } = query;
+
+    if (!start_date || !end_date) {
+        res.writeHead(400, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({
+            error: 'Необходимо указать start_date и end_date в формате YYYY-MM-DD'
+        }));
+        return;
+    }
+
+    console.log(`📊 Генерация TXT отчета за период: ${start_date} - ${end_date}`);
+
+    const sql = `
+        SELECT 
+            b.id,
+            b.booking_number,
+            b.guest_name,
+            b.guest_lastname,
+            b.guest_surname,
+            b.guest_phone,
+            b.guest_email,
+            b.checkin_date,
+            b.checkout_date,
+            b.guest_count,
+            b.total_price,
+            b.services_json,
+            b.meals_json,
+            b.spa_json,
+            b.passport_series,
+            b.passport_number,
+            b.passport_issued_by,
+            b.passport_issue_date,
+            b.created_at,
+            r.room_number,
+            rt.name as room_type_name
+        FROM Bookings b
+        JOIN Room r ON b.room_id = r.id
+        JOIN Room_types rt ON r.room_type_id = rt.id
+        WHERE date(b.created_at) >= date(?)
+        AND date(b.created_at) <= date(?)
+        ORDER BY b.created_at DESC
+    `;
+
+    db.all(sql, [start_date, end_date], (err, bookings) => {
+        if (err) {
+            console.error('❌ Ошибка генерации отчета:', err.message);
+            res.writeHead(500, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify({ error: err.message }));
+            return;
+        }
+
+        const txtContent = generateReportContent(start_date, end_date, bookings);
+
+        res.writeHead(200, {
+            'Content-Type': 'text/plain; charset=utf-8',
+            'Content-Disposition': `attachment; filename="report_${start_date}_${end_date}.txt"`
+        });
+        res.end(txtContent);
+    });
+}
+
+// Функция для формирования содержимого отчета
+function generateReportContent(startDate, endDate, bookings) {
+    let content = '';
+
+    content += '═'.repeat(80) + '\n';
+    content += ' '.repeat(25) + 'ОТЧЕТ ПО БРОНИРОВАНИЯМ\n';
+    content += '═'.repeat(80) + '\n\n';
+
+    content += `ПЕРИОД: ${startDate} - ${endDate}\n`;
+    content += `СГЕНЕРИРОВАНО: ${new Date().toLocaleString('ru-RU')}\n`;
+    content += `ОБЩЕЕ КОЛИЧЕСТВО: ${bookings.length} бронирований\n\n`;
+
+    const totalGuests = bookings.reduce((sum, b) => sum + (parseInt(b.guest_count) || 1), 0);
+    const totalRevenue = bookings.reduce((sum, b) => sum + (parseFloat(b.total_price) || 0), 0);
+
+    content += '─'.repeat(80) + '\n';
+    content += 'СТАТИСТИКА:\n';
+    content += '─'.repeat(80) + '\n';
+    content += `• Всего бронирований: ${bookings.length}\n`;
+    content += `• Всего гостей: ${totalGuests}\n`;
+    content += `• Общая выручка: ${totalRevenue.toFixed(2)} ₽\n`;
+    content += `• Средняя выручка за бронирование: ${bookings.length > 0 ? (totalRevenue / bookings.length).toFixed(2) : '0'} ₽\n`;
+    content += `• Среднее количество гостей: ${bookings.length > 0 ? (totalGuests / bookings.length).toFixed(1) : '0'}\n\n`;
+
+    if (bookings.length > 0) {
+        content += '─'.repeat(80) + '\n';
+        content += 'ДЕТАЛИ БРОНИРОВАНИЙ:\n';
+        content += '─'.repeat(80) + '\n\n';
+
+        bookings.forEach((booking, index) => {
+            const num = index + 1;
+
+            content += `БРОНИРОВАНИЕ №${num} ${'─'.repeat(70 - String(num).length)}\n\n`;
+
+            content += `  Номер брони: ${booking.booking_number}\n`;
+            content += `  Дата создания: ${new Date(booking.created_at).toLocaleString('ru-RU')}\n\n`;
+
+            content += `  НОМЕР:\n`;
+            content += `    • Номер: ${booking.room_number}\n`;
+            content += `    • Тип: ${booking.room_type_name}\n`;
+            content += `    • Заезд: ${booking.checkin_date}\n`;
+            content += `    • Выезд: ${booking.checkout_date}\n`;
+            content += `    • Количество ночей: ${calculateNights(booking.checkin_date, booking.checkout_date)}\n`;
+            content += `    • Гостей: ${booking.guest_count}\n\n`;
+
+            content += `  ГОСТЬ:\n`;
+            content += `    • ФИО: ${booking.guest_lastname} ${booking.guest_name} ${booking.guest_surname || ''}\n`;
+            content += `    • Телефон: ${booking.guest_phone}\n`;
+            content += `    • Email: ${booking.guest_email}\n`;
+
+            if (booking.passport_series || booking.passport_number) {
+                content += `    • Паспорт: ${booking.passport_series || ''} ${booking.passport_number || ''}\n`;
+            }
+
+            if (booking.passport_issued_by) {
+                content += `    • Кем выдан: ${booking.passport_issued_by}\n`;
+            }
+
+            if (booking.passport_issue_date) {
+                content += `    • Дата выдачи: ${booking.passport_issue_date}\n`;
+            }
+            content += '\n';
+
+            let additionalServices = [];
+
+            if (booking.services_json) {
+                try {
+                    const services = JSON.parse(booking.services_json);
+                    if (Object.keys(services).length > 0) {
+                        additionalServices.push('Услуги: ' + Object.values(services).filter(v => v > 0).length);
+                    }
+                } catch (e) { }
+            }
+
+            if (booking.meals_json) {
+                try {
+                    const meals = JSON.parse(booking.meals_json);
+                    if (Object.keys(meals).length > 0) {
+                        additionalServices.push('Питание: ' + Object.values(meals).filter(v => v > 0).length);
+                    }
+                } catch (e) { }
+            }
+
+            if (booking.spa_json) {
+                try {
+                    const spa = JSON.parse(booking.spa_json);
+                    if (Object.keys(spa).length > 0) {
+                        additionalServices.push('SPA: ' + Object.values(spa).filter(v => v > 0).length);
+                    }
+                } catch (e) { }
+            }
+
+            if (additionalServices.length > 0) {
+                content += `  ДОПОЛНИТЕЛЬНЫЕ УСЛУГИ: ${additionalServices.join(', ')}\n\n`;
+            }
+
+            content += `  ФИНАНСЫ:\n`;
+            content += `    • Стоимость номера: ${parseFloat(booking.total_price || 0).toFixed(2)} ₽\n`;
+            content += `    • Стоимость за ночь: ${calculatePricePerNight(booking.total_price, booking.checkin_date, booking.checkout_date)} ₽\n\n`;
+
+            content += '─'.repeat(80) + '\n\n';
+        });
+    } else {
+        content += 'Нет бронирований за указанный период.\n\n';
+    }
+
+    content += '═'.repeat(80) + '\n';
+    content += 'ИТОГОВАЯ ИНФОРМАЦИЯ:\n';
+    content += '═'.repeat(80) + '\n';
+    content += `• Отчет сгенерирован: ${new Date().toLocaleString('ru-RU')}\n`;
+    content += `• Период отчета: ${startDate} - ${endDate}\n`;
+    content += `• Всего бронирований: ${bookings.length}\n`;
+    content += `• Общая выручка: ${totalRevenue.toFixed(2)} ₽\n\n`;
+
+    content += 'Отчет сгенерирован автоматически системой LUMINA ESTERIA GRAND HOTEL\n';
+    content += '═'.repeat(80);
+
+    return content;
+}
+
+function calculateNights(checkin, checkout) {
+    if (!checkin || !checkout) return '?';
+    const checkinDate = new Date(checkin);
+    const checkoutDate = new Date(checkout);
+    const diffTime = Math.abs(checkoutDate - checkinDate);
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    return diffDays;
+}
+
+function calculatePricePerNight(totalPrice, checkin, checkout) {
+    const nights = calculateNights(checkin, checkout);
+    if (nights === '?' || nights === 0) return parseFloat(totalPrice || 0).toFixed(2);
+    return (parseFloat(totalPrice || 0) / nights).toFixed(2);
+}
+
+
+
 // ======================================================================================================
 
 const server = http.createServer((req, res) => {
@@ -804,7 +971,16 @@ const server = http.createServer((req, res) => {
         return;
     }
 
-    // Новые API эндпоинты для бронирования
+    if (pathname === '/report.html') {
+        serveFile('report.html', 'text/html', res);
+        return;
+    }
+
+    if (pathname === '/api/report/txt' && req.method === 'GET') {
+        generateTxtReport(parsedUrl.query, res);
+        return;
+    }
+
     if (pathname === '/api/rooms' && req.method === 'GET') {
         getAvailableRooms(req, res, parsedUrl.query);
         return;
@@ -825,7 +1001,6 @@ const server = http.createServer((req, res) => {
         return;
     }
 
-    // Существующие эндпоинты
     if (pathname === '/api/drinks' && req.method === 'GET') {
         getDB(res);
         return;
@@ -838,7 +1013,7 @@ const server = http.createServer((req, res) => {
     }
 
     if (pathname === '/api/room' && req.method === 'GET') {
-        searchRoom('', res); // Получить все комнаты
+        searchRoom('', res);
         return;
     }
 
@@ -870,7 +1045,6 @@ const server = http.createServer((req, res) => {
         return;
     }
 
-    // Статические файлы
     if (pathname === '/' || pathname === '/trpoMain.html') {
         serveFile('trpoMain.html', 'text/html', res);
         return;
@@ -915,6 +1089,7 @@ server.listen(PORT, () => {
     console.log(`Бронирование: http://localhost:${PORT}/booking-selection.html`);
     console.log(`API номеров: http://localhost:${PORT}/api/rooms`);
     console.log(`API напитков: http://localhost:${PORT}/api/drinks`);
+    console.log(`Генератор отчетов: http://localhost:${PORT}/report.html`);
     console.log(`База данных: ${db ? 'подключена' : 'не доступна'}`);
     console.log('='.repeat(50));
 });
