@@ -158,9 +158,92 @@
             </ul>
         </div>
     </div>
+    <div style="margin-top: 40px; padding-top: 30px; border-top: 2px solid #eee;">
+        <h2 style="color: #2c3e50; margin-bottom: 20px; text-align: center;">📅 Отчет по свободным номерам</h2>
 
+        <div class="form-group">
+            <label for="room_date">Дата проверки:</label>
+            <input type="date" id="room_date" name="room_date" required>
+        </div>
+
+        <div class="form-group">
+            <label for="room_guests">Количество гостей:</label>
+            <select id="room_guests" name="room_guests"
+                style="width: 100%; padding: 12px 15px; border: 2px solid #ddd; border-radius: 8px; font-size: 16px;">
+                <option value="1">1 гость</option>
+                <option value="2" selected>2 гостя</option>
+                <option value="3">3 гостя</option>
+                <option value="4">4 гостя</option>
+                <option value="5">5 гостей</option>
+                <option value="6">6 гостей</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label>
+                <input type="checkbox" id="detailed_report" checked>
+                Подробный отчет (с описанием номеров)
+            </label>
+        </div>
+
+        <button type="button" class="btn" onclick="generateAvailableRoomsReport()"
+            style="background: linear-gradient(135deg, #27ae60, #219653);">
+            🏨 Сгенерировать отчет по свободным номерам
+        </button>
+
+        <div class="info-box" style="background: #e8f6f3; border-left-color: #27ae60;">
+            <h3>Что включает отчет:</h3>
+            <ul>
+                <li>Статистику загрузки отеля на указанную дату</li>
+                <li>Список всех свободных номеров</li>
+                <li>Цены и вместимость номеров</li>
+                <li>Рекомендации по продажам</li>
+                <li>Прогноз на ближайшие даты</li>
+            </ul>
+        </div>
+    </div>
     <script>
-        // Устанавливаем сегодняшнюю дату как дату окончания
+        function generateAvailableRoomsReport() {
+            const date = document.getElementById('room_date').value;
+            const guests = document.getElementById('room_guests').value;
+            const detailed = document.getElementById('detailed_report').checked;
+
+            if (!date) {
+                alert('Пожалуйста, выберите дату проверки');
+                return;
+            }
+
+            // Показываем сообщение о начале генерации
+            const btn = document.querySelector('[onclick="generateAvailableRoomsReport()"]');
+            const originalText = btn.textContent;
+            btn.textContent = '⏳ Поиск свободных номеров...';
+            btn.disabled = true;
+
+            // Формируем URL для запроса
+            const url = `http://localhost:3000/api/report/available-rooms?date=${date}&guests=${guests}&detailed=${detailed}`;
+
+            // Открываем в новой вкладке для скачивания файла
+            const link = document.createElement('a');
+            link.href = url;
+            link.target = '_blank';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+
+            // Восстанавливаем кнопку через 3 секунды
+            setTimeout(() => {
+                btn.textContent = originalText;
+                btn.disabled = false;
+                alert(`Отчет по свободным номерам на ${date} успешно сгенерирован!\nФайл скачается автоматически.`);
+            }, 3000);
+        }
+
+        window.addEventListener('load', function () {
+            const tomorrow = new Date();
+            tomorrow.setDate(tomorrow.getDate() + 1);
+            document.getElementById('room_date').value = tomorrow.toISOString().split('T')[0];
+        });
+
         document.getElementById('end_date').value = new Date().toISOString().split('T')[0];
 
         // Устанавливаем дату начала - 30 дней назад

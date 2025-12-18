@@ -808,7 +808,7 @@ function generateTxtReport(query, res) {
             return;
         }
 
-        const txtContent = generateReportContent(start_date, end_date, bookings);
+        const txtContent = generateBookingsReportContent(start_date, end_date, bookings);
 
         res.writeHead(200, {
             'Content-Type': 'text/plain; charset=utf-8',
@@ -818,8 +818,8 @@ function generateTxtReport(query, res) {
     });
 }
 
-// Функция для формирования содержимого отчета
-function generateReportContent(startDate, endDate, bookings) {
+// Функция для формирования содержимого отчета по бронированиям
+function generateBookingsReportContent(startDate, endDate, bookings) {
     let content = '';
 
     content += '═'.repeat(80) + '\n';
@@ -953,7 +953,245 @@ function calculatePricePerNight(totalPrice, checkin, checkout) {
     return (parseFloat(totalPrice || 0) / nights).toFixed(2);
 }
 
+// Функция для генерации отчета по свободным номерам в TXT формате
+function generateAvailableRoomsReport(query, res) {
+    if (!db) {
+        res.writeHead(500, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ error: 'База данных не доступна' }));
+        return;
+    }
 
+    const { date, guests = 1, detailed = 'true' } = query;
+
+    if (!date) {
+        res.writeHead(400, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({
+            error: 'Необходимо указать дату в формате YYYY-MM-DD'
+        }));
+        return;
+    }
+
+    console.log(`📊 Генерация отчета по свободным номерам на дату: ${date}, гостей: ${guests}`);
+
+    // Упрощенный SQL запрос без отсутствующих столбцов
+    const sql = `
+        SELECT 
+            r.id,
+            r.room_number,
+            r.current_price,
+            rt.name AS room_type_name,
+            rt.capacity,
+            r.current_price as actual_price
+        FROM Room r
+        JOIN Room_types rt ON r.room_type_id = rt.id
+        WHERE rt.capacity >= ?
+        AND r.id NOT IN (
+            SELECT room_id 
+            FROM Bookings 
+            WHERE checkin_date <= date(?) 
+            AND checkout_date > date(?)
+        )
+        ORDER BY rt.capacity, r.current_price, r.room_number
+    `;
+
+    const params = [guests, date, date];
+
+    db.all(sql, params, (err, availableRooms) => {
+        if (err) {
+            console.error('❌ Ошибка генерации отчета:', err.message);
+            res.writeHead(500, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify({ error: err.message }));
+            return;
+        }
+
+        // Получаем общее количество номеров
+        db.get("SELECT COUNT(*) as total FROM Room", [], (err, totalData) => {
+            const totalRooms = totalData?.total || 0;
+
+            // Получаем занятые номера
+            const occupiedSql = `
+                SELECT COUNT(DISTINCT room_id) as occupied_count
+                FROM Bookings 
+                WHERE checkin_date <= date(?) 
+                AND checkout_date > date(?)
+            `;
+
+            db.get(occupiedSql, [date, date], (err, occupiedData) => {
+                if (err) {
+                    console.error('Ошибка получения статистики:', err);
+                    occupiedData = { occupied_count: 0 };
+                }
+
+                // Генерируем TXT отчет СРАЗУ, без вложенных callback
+                const txtContent = generateAvailableRoomsReportContent(
+                    date,
+                    parseInt(guests),
+                    availableRooms,
+                    occupiedData,
+                    totalRooms,
+                    detailed === 'true'
+                );
+
+                // Отправляем файл
+                res.writeHead(200, {
+                    'Content-Type': 'text/plain; charset=utf-8',
+                    'Content-Disposition': `attachment; filename="available_rooms_${date}.txt"`
+                });
+                res.end(txtContent);
+            });
+        });
+    });
+}
+
+// Исправленная функция формирования отчета по свободным номерам
+function generateAvailableRoomsReportContent(date, guests, availableRooms, occupiedData, totalRooms, detailed) {
+    let content = '';
+
+    // Заголовок
+    content += '═'.repeat(80) + '\n';
+    content += ' '.repeat(20) + 'ОТЧЕТ ПО СВОБОДНЫМ НОМЕРАМ\n';
+    content += '═'.repeat(80) + '\n\n';
+
+    // Основная информация
+    content += `ДАТА: ${date}\n`;
+    content += `ГОСТЕЙ: ${guests}\n`;
+    content += `СГЕНЕРИРОВАНО: ${new Date().toLocaleString('ru-RU')}\n\n`;
+
+    // Общая статистика
+    content += '─'.repeat(80) + '\n';
+    content += 'СТАТИСТИКА ЗАГРУЗКИ ОТЕЛЯ:\n';
+    content += '─'.repeat(80) + '\n';
+
+    const occupiedCount = occupiedData?.occupied_count || 0;
+    const freeCount = availableRooms.length;
+    const utilization = totalRooms > 0 ? (occupiedCount / totalRooms * 100).toFixed(1) : 0;
+
+    content += `• Всего номеров в отеле: ${totalRooms}\n`;
+    content += `• Занято номеров: ${occupiedCount} (${utilization}%)\n`;
+    content += `• Свободно номеров: ${freeCount} (${(100 - utilization).toFixed(1)}%)\n`;
+    content += `• Доступно номеров для ${guests} гостей: ${availableRooms.length}\n\n`;
+
+    // Список свободных номеров
+    if (availableRooms.length > 0) {
+        content += '─'.repeat(80) + '\n';
+        content += `СВОБОДНЫЕ НОМЕРА ДЛЯ ${guests} ГОСТЕЙ:\n`;
+        content += '─'.repeat(80) + '\n\n';
+
+        // Группируем по типам номеров
+        const roomsByType = {};
+        availableRooms.forEach(room => {
+            if (!roomsByType[room.room_type_name]) {
+                roomsByType[room.room_type_name] = [];
+            }
+            roomsByType[room.room_type_name].push(room);
+        });
+
+        // Выводим по типам
+        Object.entries(roomsByType).forEach(([typeName, rooms], typeIndex) => {
+            content += `${typeIndex + 1}. ${typeName.toUpperCase()} ${'─'.repeat(70 - typeName.length)}\n`;
+            content += `   Всего свободно: ${rooms.length} номеров\n`;
+            content += `   Вместимость: до ${rooms[0]?.capacity || '?'} гостей\n`;
+            content += `   Диапазон цен: ${getPriceRangeSimple(rooms)}\n\n`;
+
+            if (detailed) {
+                rooms.forEach((room, roomIndex) => {
+                    const roomNum = roomIndex + 1;
+                    content += `   ${roomNum}. Номер ${room.room_number}\n`;
+                    content += `      • Цена за ночь: ${parseFloat(room.current_price || 0).toFixed(2)} ₽\n`;
+                    content += `      • Вместимость: ${room.capacity} гостей\n`;
+                    content += `      • Тип номера: ${room.room_type_name}\n`;
+                    content += '\n';
+                });
+            } else {
+                // Краткий список
+                const roomNumbers = rooms.map(r => r.room_number).sort((a, b) => a - b);
+                content += `   Номера: ${roomNumbers.join(', ')}\n\n`;
+            }
+
+            if (typeIndex < Object.keys(roomsByType).length - 1) {
+                content += '\n';
+            }
+        });
+
+        // Рекомендации
+        content += '─'.repeat(80) + '\n';
+        content += 'РЕКОМЕНДАЦИИ:\n';
+        content += '─'.repeat(80) + '\n';
+
+        if (availableRooms.length >= 10) {
+            content += `✓ Отличная доступность! Много свободных номеров на ${date}\n`;
+            content += `✓ Можно предложить гостям выбор из ${Object.keys(roomsByType).length} типов номеров\n`;
+        } else if (availableRooms.length >= 5) {
+            content += `✓ Умеренная загрузка. Есть ${availableRooms.length} свободных номеров\n`;
+            content += `✓ Рекомендуется активное продвижение свободных номеров\n`;
+        } else if (availableRooms.length > 0) {
+            content += `⚠️ Высокая загрузка! Осталось всего ${availableRooms.length} номеров\n`;
+            content += `⚠️ Рекомендуется подготовить альтернативные варианты\n`;
+        } else {
+            content += `✗ Нет свободных номеров на указанную дату\n`;
+            content += `✗ Рекомендуется искать альтернативные решения или даты\n`;
+        }
+
+        // Самый выгодный вариант
+        if (availableRooms.length > 0) {
+            const cheapestRoom = availableRooms.reduce((cheapest, current) => {
+                return (parseFloat(current.current_price || Infinity) <
+                    parseFloat(cheapest.current_price || Infinity))
+                    ? current : cheapest;
+            });
+
+            const mostSpacious = availableRooms.reduce((max, current) => {
+                return (current.capacity > max.capacity) ? current : max;
+            }, { capacity: 0 });
+
+            content += `\n✓ Самый бюджетный вариант: Номер ${cheapestRoom.room_number} (${cheapestRoom.room_type_name}) - ${parseFloat(cheapestRoom.current_price || 0).toFixed(2)} ₽\n`;
+
+            if (mostSpacious.room_number) {
+                content += `✓ Самый вместительный: Номер ${mostSpacious.room_number} (${mostSpacious.room_type_name}) - до ${mostSpacious.capacity} гостей\n`;
+            }
+        }
+
+    } else {
+        content += '─'.repeat(80) + '\n';
+        content += 'СВОБОДНЫХ НОМЕРОВ НЕТ\n';
+        content += '─'.repeat(80) + '\n\n';
+        content += `На дату ${date} нет свободных номеров для ${guests} гостей.\n`;
+        content += `Рекомендуется проверять альтернативные даты или уменьшить количество гостей.\n`;
+    }
+
+    // Итог
+    content += 'ИТОГ:\n';
+    content += '═'.repeat(80) + '\n';
+
+    if (availableRooms.length > 0) {
+        content += `✅ На ${date} доступно ${availableRooms.length} номеров для ${guests} гостей\n`;
+        content += `✅ Загрузка отеля: ${utilization}%\n`;
+        content += `✅ Рекомендуется активно продавать свободные номера\n`;
+    } else {
+        content += `❌ На ${date} нет свободных номеров для ${guests} гостей\n`;
+        content += `❌ Загрузка отеля: ${totalRooms > 0 ? '100' : '0'}%\n`;
+        content += `❌ Требуется предложить альтернативные варианты\n`;
+    }
+
+    content += '\nОтчет сгенерирован автоматически системой LUMINA ESTERIA GRAND HOTEL\n';
+    content += '═'.repeat(80);
+
+    return content;
+}
+
+// Упрощенная функция для диапазона цен
+function getPriceRangeSimple(rooms) {
+    if (!rooms || rooms.length === 0) return '0 ₽';
+
+    const prices = rooms.map(r => parseFloat(r.current_price || 0));
+    const minPrice = Math.min(...prices);
+    const maxPrice = Math.max(...prices);
+
+    if (minPrice === maxPrice) {
+        return `${minPrice.toFixed(2)} ₽`;
+    }
+    return `${minPrice.toFixed(2)} - ${maxPrice.toFixed(2)} ₽`;
+}
 
 // ======================================================================================================
 
@@ -968,6 +1206,11 @@ const server = http.createServer((req, res) => {
     if (req.method === 'OPTIONS') {
         res.writeHead(200);
         res.end();
+        return;
+    }
+
+    if (pathname === '/api/report/available-rooms' && req.method === 'GET') {
+        generateAvailableRoomsReport(parsedUrl.query, res);
         return;
     }
 
