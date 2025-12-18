@@ -425,18 +425,238 @@
         ::-webkit-scrollbar-thumb:hover {
             background: var(--accent-color);
         }
+
+        .suggestion-item {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: var(--border-radius);
+            padding: 20px;
+            margin: 15px 0;
+            border-left: 4px solid var(--gold);
+            box-shadow: var(--shadow-sm);
+            transition: var(--transition);
+        }
+
+        .suggestion-item:hover {
+            transform: translateX(5px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .suggestion-item button {
+            background: var(--gradient-gold);
+            color: var(--primary-color);
+            border: none;
+            padding: 10px 20px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: var(--transition);
+        }
+
+        .suggestion-item button:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .alternative-room {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.7);
+            border-radius: 12px;
+            margin: 10px 0;
+            border: 1px solid rgba(212, 175, 55, 0.3);
+        }
+
+        /* Альтернативы модалка */
+        .alternatives-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 10000;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .alternatives-content {
+            background: white;
+            border-radius: var(--border-radius-lg);
+            padding: 40px;
+            max-width: 800px;
+            width: 100%;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: var(--shadow-lg);
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .alternatives-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .alternatives-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            color: var(--primary-color);
+        }
+
+        .close-alternatives {
+            background: none;
+            border: none;
+            font-size: 2rem;
+            color: var(--text-light);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .close-alternatives:hover {
+            color: var(--secondary-color);
+        }
+
+        .alternatives-section {
+            margin-bottom: 30px;
+            padding: 25px;
+            background: rgba(248, 249, 250, 0.5);
+            border-radius: var(--border-radius);
+        }
+
+        .section-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.4rem;
+            margin-bottom: 20px;
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .alternative-date-item {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 20px;
+            margin-bottom: 15px;
+            border-left: 4px solid var(--gold);
+            transition: var(--transition);
+        }
+
+        .alternative-date-item:hover {
+            transform: translateX(5px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .alternative-room-item {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 20px;
+            margin-bottom: 15px;
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            transition: var(--transition);
+        }
+
+        .alternative-room-item:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .select-alternative-btn {
+            background: var(--gradient-gold);
+            color: var(--primary-color);
+            border: none;
+            padding: 12px 25px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: var(--transition);
+            margin-top: 10px;
+            width: 100%;
+        }
+
+        .select-alternative-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .original-info {
+            background: rgba(231, 76, 60, 0.1);
+            border-radius: var(--border-radius);
+            padding: 15px;
+            margin-bottom: 20px;
+            border-left: 4px solid #e74c3c;
+        }
     </style>
 </head>
 
 <body>
+    <div id="debugInfo" style="
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    background: rgba(0,0,0,0.8);
+    color: white;
+    padding: 10px;
+    border-radius: 5px;
+    font-size: 12px;
+    z-index: 9999;
+    display: none;
+">
+        <button onclick="toggleDebug()"
+            style="background: #3498db; color: white; border: none; padding: 2px 5px; margin-bottom: 5px;">
+            🔧 Debug
+        </button>
+        <div id="debugContent"></div>
+    </div>
+
+    <script>
+        function toggleDebug() {
+            const debugDiv = document.getElementById('debugInfo');
+            const contentDiv = document.getElementById('debugContent');
+
+            const reservationData = getReservationData();
+            const localStorageData = localStorage.getItem('hotelBookingData');
+
+            contentDiv.innerHTML = `
+        <strong>LocalStorage:</strong><br>
+        ${localStorageData ? JSON.stringify(JSON.parse(localStorageData), null, 2) : 'Нет данных'}<br><br>
+        <strong>Parsed Data:</strong><br>
+        ${JSON.stringify(reservationData, null, 2)}<br><br>
+        <strong>Selected Room:</strong><br>
+        ${selectedRoom ? JSON.stringify(selectedRoom, null, 2) : 'Не выбран'}
+    `;
+
+            debugDiv.style.display = debugDiv.style.display === 'none' ? 'block' : 'none';
+        }
+    </script>
     <div class="container">
         <div class="header">
+
             <h1>🎯 ВЫБОР УСЛУГ</h1>
             <p>Завершите ваше бронирование, выбрав номер и дополнительные услуги</p>
 
             <!-- Панель управления -->
             <div class="control-panel">
-                <div></div> <!-- Пустой div для выравнивания -->
+                <button onclick="refreshData()" class="btn" style="background: var(--gradient-primary); color: white;">
+                    🔄 Обновить данные
+                </button>
                 <button onclick="closePage()" class="btn back-btn">← Вернуться</button>
             </div>
         </div>
@@ -513,9 +733,66 @@
 
         <!-- Кнопка подтверждения -->
         <button class="submit-btn" onclick="confirmBooking()">✅ ПОДТВЕРДИТЬ БРОНИРОВАНИЕ</button>
+        <div id="alternativesModal" class="alternatives-modal">
+            <div class="alternatives-content">
+                <div class="alternatives-header">
+                    <h2 class="alternatives-title">🎯 Альтернативные варианты</h2>
+                    <button class="close-alternatives" onclick="closeAlternativesModal()">&times;</button>
+                </div>
+
+                <div class="original-info">
+                    <p>Выбранный номер <strong id="originalRoomName"></strong> занят на даты
+                        <strong id="originalDates"></strong>.
+                    </p>
+                </div>
+
+                <!-- Альтернативные даты -->
+                <div class="alternatives-section" id="alternativeDatesSection" style="display: none;">
+                    <h3 class="section-title">📅 Ближайшие свободные даты для этого номера</h3>
+                    <div id="alternativeDatesList"></div>
+                </div>
+
+                <!-- Альтернативные номера -->
+                <div class="alternatives-section" id="alternativeRoomsSection" style="display: none;">
+                    <h3 class="section-title">🏨 Другие свободные номера на ваши даты</h3>
+                    <div id="alternativeRoomsList"></div>
+                </div>
+
+                <div style="text-align: center; margin-top: 30px;">
+                    <button onclick="closeAlternativesModal()" class="btn"
+                        style="background: var(--gradient-primary); color: white;">
+                        Вернуться к выбору
+                    </button>
+                </div>
+            </div>
+        </div>
     </div>
 
     <script>
+        function refreshData() {
+            console.log('Обновление данных...');
+            loadData();
+        }
+
+        function showNoRoomsMessage(suggestion) {
+            const container = document.getElementById('roomsList');
+
+            let html = `
+        <div class="error">
+            ❌ Свободных номеров на выбранную дату нет`;
+
+            if (suggestion && suggestion.nextAvailableDate) {
+                html += `
+            <br><br>
+            🔄 Ближайшая доступная дата заезда:
+            <strong>${formatDisplayDate(suggestion.nextAvailableDate)}</strong>`;
+            }
+
+            html += '</div>';
+
+            container.innerHTML = html;
+        }
+
         // Основные переменные
         const API_BASE = 'http://localhost:3000';
         let selectedRoom = null;
@@ -528,12 +805,20 @@
             window.close();
         }
 
-        // Функция для загрузки данных
         async function loadData() {
             try {
                 console.log('Загрузка данных бронирования...');
                 const reservationData = getReservationData();
                 console.log('Данные из localStorage:', reservationData);
+
+                // Выводим все ключи localStorage для отладки
+                console.log('Все ключи localStorage:', Object.keys(localStorage));
+
+                if (!reservationData || Object.keys(reservationData).length === 0) {
+                    console.error('Нет данных бронирования в localStorage');
+                    showError('Не найдены данные бронирования. Пожалуйста, вернитесь на главную страницу и заполните форму заново.');
+                    return;
+                }
 
                 await Promise.all([
                     loadRooms(),
@@ -548,19 +833,163 @@
             }
         }
 
-        // Загрузка номеров
         async function loadRooms() {
             const container = document.getElementById('roomsList');
-            try {
-                const response = await fetch(`${API_BASE}/api/rooms`);
-                if (!response.ok) throw new Error('Ошибка загрузки номеров');
+            const reservation = getReservationData();
 
-                const rooms = await response.json();
-                console.log('Загруженные номера:', rooms); // Отладочный вывод
-                displayRooms(rooms);
+            console.log('Данные бронирования:', reservation); // Для отладки
+
+            // Проверяем наличие всех необходимых данных
+            if (!reservation.date && !reservation.checkin_date) {
+                container.innerHTML = '<div class="error">❌ Не выбрана дата заезда</div>';
+                return;
+            }
+
+            // Используем checkin_date если есть, иначе date
+            const checkin = reservation.checkin_date || reservation.date;
+
+            // Проверяем наличие ночей и гостей
+            if (!reservation.nights || !reservation.guests) {
+                container.innerHTML = '<div class="error">❌ Не указано количество ночей или гостей</div>';
+                console.log('Nights:', reservation.nights, 'Guests:', reservation.guests);
+                return;
+            }
+
+            const nights = parseInt(reservation.nights) || 1;
+            const checkout = new Date(
+                new Date(checkin).getTime() + nights * 24 * 60 * 60 * 1000
+            ).toISOString().split('T')[0];
+
+            console.log(`Поиск номеров: ${checkin} - ${checkout}, гостей: ${reservation.guests}, ночей: ${nights}`);
+
+            try {
+                const response = await fetch(
+                    `${API_BASE}/api/rooms?checkin=${checkin}&checkout=${checkout}&guests=${reservation.guests}`
+                );
+
+                if (!response.ok) {
+                    throw new Error(`Ошибка сервера: ${response.status}`);
+                }
+
+                const data = await response.json();
+                console.log('Ответ от сервера:', data);
+
+                if (data.availableRooms && data.availableRooms.length > 0) {
+                    displayRooms(data.availableRooms);
+                } else {
+                    displayAlternativeSuggestions(data);
+                }
+
             } catch (error) {
-                console.error('Ошибка:', error);
-                container.innerHTML = `<div class="error">❌ ${error.message}</div>`;
+                console.error('Ошибка загрузки номеров:', error);
+                container.innerHTML = '<div class="error">❌ Ошибка загрузки номеров: ' + error.message + '</div>';
+            }
+        }
+
+        function displayAlternativeSuggestions(data) {
+            const container = document.getElementById('roomsList');
+
+            if (!data.suggestions || data.suggestions.length === 0) {
+                container.innerHTML = `
+            <div class="error">
+                ❌ На выбранные даты свободных номеров нет.<br><br>
+                Пожалуйста, попробуйте другие даты или свяжитесь с нами по телефону.
+            </div>
+        `;
+                return;
+            }
+
+            let html = `
+        <div class="error">
+            ❌ На выбранные даты (${formatDisplayDate(data.originalRequest.checkin)} - 
+            ${formatDisplayDate(data.originalRequest.checkout)}) свободных номеров нет.<br><br>
+            <strong>Предлагаем альтернативные варианты:</strong>
+        </div>
+    `;
+
+            data.suggestions.forEach((suggestion, index) => {
+                html += `<div class="suggestion-item" style="
+            background: rgba(255,255,255,0.9);
+            border-radius: var(--border-radius);
+            padding: 20px;
+            margin: 15px 0;
+            border-left: 4px solid var(--gold);
+        ">`;
+
+                html += `<div style="font-weight: 600; margin-bottom: 10px; color: var(--primary-color);">`;
+                html += `Вариант ${index + 1}: ${suggestion.message}`;
+                html += `</div>`;
+
+                if (suggestion.type === 'alternative_date' && suggestion.nextAvailableDate) {
+                    html += `<div style="margin: 10px 0;">
+                <button onclick="selectAlternativeDate('${suggestion.nextAvailableDate}')" 
+                    style="background: var(--gradient-gold); color: var(--primary-color); 
+                    border: none; padding: 10px 20px; border-radius: 20px; cursor: pointer; font-weight: 600;">
+                    Выбрать эту дату
+                </button>
+            </div>`;
+                }
+
+                if (suggestion.type === 'different_room_type' && suggestion.rooms) {
+                    suggestion.rooms.forEach(room => {
+                        html += `
+                    <div style="margin: 10px 0; padding: 10px; background: rgba(255,255,255,0.7); border-radius: 8px;">
+                        <div>Номер ${room.room_number} (${room.room_type_name})</div>
+                        <div>Вместимость: ${room.capacity} гостей</div>
+                        <div>Цена: ${formatPrice(room.current_price)}/ночь</div>
+                        <button onclick="selectAlternativeRoom('${room.id}')" 
+                            style="background: var(--gradient-primary); color: white; 
+                            border: none; padding: 8px 16px; border-radius: 15px; cursor: pointer; margin-top: 5px;">
+                            Выбрать этот номер
+                        </button>
+                    </div>
+                `;
+                    });
+                }
+
+                if (suggestion.type === 'shorter_stay') {
+                    html += `<div style="margin: 10px 0;">
+                <button onclick="selectShorterStay(${suggestion.nights})" 
+                    style="background: var(--gradient-secondary); color: white; 
+                    border: none; padding: 10px 20px; border-radius: 20px; cursor: pointer; font-weight: 600;">
+                    Забронировать на ${suggestion.nights} ночь
+                </button>
+            </div>`;
+                }
+
+                html += `</div>`;
+            });
+
+            container.innerHTML = html;
+        }
+
+        function selectAlternativeDate(date) {
+            // Обновляем дату в localStorage
+            const bookingData = JSON.parse(localStorage.getItem('hotelBookingData') || '{}');
+            if (bookingData.reservation) {
+                bookingData.reservation.checkin_date = date;
+                bookingData.reservation.date = date;
+                localStorage.setItem('hotelBookingData', JSON.stringify(bookingData));
+
+                // Перезагружаем страницу
+                loadRooms();
+            }
+        }
+
+        function selectAlternativeRoom(roomId) {
+            // Здесь можно реализовать выбор альтернативного номера
+            alert('Выбран альтернативный номер. Функция в разработке.');
+        }
+
+        function selectShorterStay(nights) {
+            // Обновляем количество ночей в localStorage
+            const bookingData = JSON.parse(localStorage.getItem('hotelBookingData') || '{}');
+            if (bookingData.reservation) {
+                bookingData.reservation.nights = nights;
+                localStorage.setItem('hotelBookingData', JSON.stringify(bookingData));
+
+                // Перезагружаем страницу
+                loadRooms();
             }
         }
 
@@ -827,9 +1256,15 @@
             const reservationData = getReservationData();
             const totalCost = calculateTotalCost();
 
-            document.getElementById('checkinDate').textContent = reservationData.date ?
-                formatDisplayDate(reservationData.date) : '-';
-            document.getElementById('guestCount').textContent = reservationData.guests || '-';
+            // Форматируем дату заезда
+            const checkinDate = reservationData.checkin_date || reservationData.date;
+            document.getElementById('checkinDate').textContent = checkinDate ?
+                formatDisplayDate(checkinDate) : '-';
+
+            // Показываем количество гостей и ночей
+            document.getElementById('guestCount').textContent =
+                `${reservationData.guests || '-'} гостей, ${reservationData.nights || '-'} ночей`;
+
             document.getElementById('totalCost').textContent = `${formatPrice(totalCost)}`;
 
             const roomItem = document.getElementById('selectedRoomItem');
@@ -845,9 +1280,23 @@
 
         function getReservationData() {
             const savedData = localStorage.getItem('hotelBookingData');
+            console.log('Данные из localStorage:', savedData); // Для отладки
+
             if (savedData) {
-                const data = JSON.parse(savedData);
-                return data.reservation || {};
+                try {
+                    const data = JSON.parse(savedData);
+                    console.log('Parsed data:', data); // Для отладки
+
+                    // Проверяем разные варианты структуры данных
+                    if (data.reservation) {
+                        return data.reservation;
+                    }
+                    // Если данные сохранены в корневом объекте
+                    return data;
+                } catch (e) {
+                    console.error('Ошибка парсинга данных:', e);
+                    return {};
+                }
             }
             return {};
         }
@@ -877,17 +1326,17 @@
 
             // Стоимость услуг
             Object.entries(selectedServices).forEach(([id, quantity]) => {
-                total += (50 * quantity); // Примерная цена
+                total += (1500 * quantity); // Примерная цена
             });
 
             // Стоимость питания
             Object.entries(selectedMeals).forEach(([id, quantity]) => {
-                total += (25 * quantity); // Примерная цена
+                total += (1200 * quantity); // Примерная цена
             });
 
             // Стоимость SPA
             Object.entries(selectedSpa).forEach(([id, quantity]) => {
-                total += (75 * quantity); // Примерная цена
+                total += (3000 * quantity); // Примерная цена
             });
 
             return total;
@@ -896,6 +1345,18 @@
         async function confirmBooking() {
             if (!selectedRoom) {
                 alert('Пожалуйста, выберите номер для бронирования');
+                return;
+            }
+
+            // Спрашиваем подтверждение
+            const confirmMessage = `Вы подтверждаете бронирование?
+    
+Дата заезда: ${formatDisplayDate(getReservationData().checkin_date || getReservationData().date)}
+Количество ночей: ${getReservationData().nights || 1}
+Номер: ${selectedRoom.room_number} (${selectedRoom.room_type_name})
+Общая стоимость: ${formatPrice(calculateTotalCost())}`;
+
+            if (!confirm(confirmMessage)) {
                 return;
             }
 
@@ -909,28 +1370,42 @@
             };
 
             try {
-                // Проверяем, доступен ли BookingManager
-                if (typeof BookingManager === 'undefined') {
-                    // Если нет, используем прямой fetch запрос
-                    await saveBookingDirectly(bookingData);
-                } else {
-                    // Используем BookingManager если доступен
-                    const bookingManager = new BookingManager();
-                    await bookingManager.confirmFinalBooking(bookingData);
-                }
+                console.log('🚀 Начинаем подтверждение бронирования...');
+
+                // Показываем индикатор загрузки
+                const submitBtn = document.querySelector('.submit-btn');
+                const originalText = submitBtn.textContent;
+                submitBtn.textContent = '⏳ Сохранение...';
+                submitBtn.disabled = true;
+
+                // Сохраняем бронирование
+                const saveResult = await saveBookingDirectly(bookingData);
 
                 // Очищаем localStorage после успешного сохранения
-                localStorage.removeItem('hotelBooking');
                 localStorage.removeItem('hotelBookingData');
 
                 // Показываем сообщение об успехе
-                alert('🎉 Бронирование успешно подтверждено!');
+                alert(`🎉 Бронирование успешно подтверждено!
+Номер бронирования: ${saveResult.bookingNumber || saveResult.bookingId}
+Мы отправили детали на вашу почту.`);
 
-                // Закрываем окно
-                closePage();
+                // Закрываем окно через 2 секунды
+                setTimeout(() => {
+                    closePage();
+                }, 2000);
+
             } catch (error) {
-                console.error('Ошибка при подтверждении бронирования:', error);
-                alert('❌ Ошибка бронирования, повторите позже');
+                console.error('❌ Ошибка при подтверждении бронирования:', error);
+
+                // Восстанавливаем кнопку
+                const submitBtn = document.querySelector('.submit-btn');
+                submitBtn.textContent = '✅ ПОДТВЕРДИТЬ БРОНИРОВАНИЕ';
+                submitBtn.disabled = false;
+
+                // Показываем ошибку
+                alert(`❌ Ошибка бронирования: ${error.message}
+        
+Пожалуйста, попробуйте еще раз или свяжитесь с нами по телефону.`);
             }
         }
 
@@ -938,6 +1413,9 @@
             try {
                 // Получаем данные из localStorage
                 const reservationData = getReservationData();
+
+                console.log('📦 Данные из localStorage:', reservationData);
+                console.log('📦 Выбранные услуги:', selectionData);
 
                 // Формируем полные данные для сохранения
                 const fullBookingData = {
@@ -950,12 +1428,16 @@
                         phone: reservationData.phone || '',
                         email: reservationData.email || ''
                     },
-                    checkinDate: reservationData.date || new Date().toISOString().split('T')[0],
+                    checkinDate: reservationData.checkin_date || reservationData.date || new Date().toISOString().split('T')[0],
+                    checkoutDate: reservationData.checkout_date || new Date(
+                        new Date(reservationData.checkin_date || reservationData.date).getTime() +
+                        (parseInt(reservationData.nights) || 1) * 24 * 60 * 60 * 1000
+                    ).toISOString().split('T')[0],
                     guestCount: reservationData.guests || '1',
                     totalCost: selectionData.totalCost,
-                    services: selectionData.services,
-                    meals: selectionData.meals,
-                    spa: selectionData.spa,
+                    services: selectionData.services || {},
+                    meals: selectionData.meals || {},
+                    spa: selectionData.spa || {},
                     passportInfo: {
                         series: reservationData.passport_series || '',
                         number: reservationData.passport_number || '',
@@ -963,6 +1445,8 @@
                         issueDate: reservationData.passport_date || ''
                     }
                 };
+
+                console.log('🚀 Отправка данных на сервер:', fullBookingData);
 
                 // Сохраняем в базу данных
                 const response = await fetch('http://localhost:3000/api/bookings', {
@@ -974,14 +1458,26 @@
                 });
 
                 if (!response.ok) {
-                    throw new Error('Ошибка сервера при сохранении бронирования');
+                    const errorText = await response.text();
+                    console.error('❌ Ответ сервера:', errorText);
+
+                    let errorMessage = 'Ошибка сервера';
+                    try {
+                        const errorData = JSON.parse(errorText);
+                        errorMessage = errorData.details || errorData.error || errorMessage;
+                    } catch (e) {
+                        errorMessage = errorText;
+                    }
+
+                    throw new Error(errorMessage);
                 }
 
                 const result = await response.json();
+                console.log('✅ Ответ сервера:', result);
                 return result;
 
             } catch (error) {
-                console.error('Ошибка сохранения бронирования:', error);
+                console.error('❌ Ошибка сохранения бронирования:', error);
                 throw error;
             }
         }
@@ -1027,6 +1523,346 @@
                 selectedSpa = booking.spa || {};
             }
         });
+        // Показать модалку с альтернативами
+        function showAlternativesModal(alternativesData) {
+            const modal = document.getElementById('alternativesModal');
+            const originalRoomName = document.getElementById('originalRoomName');
+            const originalDates = document.getElementById('originalDates');
+
+            // Заполняем информацию о первоначальном выборе
+            if (alternativesData.originalRoom) {
+                originalRoomName.textContent = `№${alternativesData.originalRoom.room_number} (${alternativesData.originalRoom.room_type_name})`;
+            }
+
+            if (alternativesData.originalDates) {
+                originalDates.textContent = `${formatDisplayDate(alternativesData.originalDates.checkin)} - ${formatDisplayDate(alternativesData.originalDates.checkout)}`;
+            }
+
+            // Показываем альтернативные даты
+            const datesSection = document.getElementById('alternativeDatesSection');
+            const datesList = document.getElementById('alternativeDatesList');
+
+            if (alternativesData.alternativeDates && alternativesData.alternativeDates.length > 0) {
+                datesSection.style.display = 'block';
+                let datesHtml = '';
+
+                alternativesData.alternativeDates.forEach(date => {
+                    const nextDate = new Date(date.next_available_date);
+                    const checkoutDate = new Date(nextDate.getTime() +
+                        (parseInt(getReservationData().nights || 1) * 24 * 60 * 60 * 1000));
+
+                    datesHtml += `
+                <div class="alternative-date-item">
+                    <div style="margin-bottom: 10px;">
+                        <strong>Доступен с:</strong> ${formatDisplayDate(date.next_available_date)}
+                    </div>
+                    <div style="margin-bottom: 15px; color: var(--text-light);">
+                        Номер: ${date.room_number} (${date.room_type_name})
+                    </div>
+                    <button class="select-alternative-btn" 
+                        onclick="selectAlternativeDate('${date.next_available_date}', '${date.room_number}', '${date.room_type_name}')">
+                        Выбрать эти даты
+                    </button>
+                </div>
+            `;
+                });
+
+                datesList.innerHTML = datesHtml;
+            } else {
+                datesSection.style.display = 'none';
+            }
+
+            // Показываем альтернативные номера
+            const roomsSection = document.getElementById('alternativeRoomsSection');
+            const roomsList = document.getElementById('alternativeRoomsList');
+
+            if (alternativesData.alternativeRooms && alternativesData.alternativeRooms.length > 0) {
+                roomsSection.style.display = 'block';
+                let roomsHtml = '';
+
+                alternativesData.alternativeRooms.forEach(room => {
+                    roomsHtml += `
+                <div class="alternative-room-item">
+                    <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 15px;">
+                        <div>
+                            <h4 style="margin-bottom: 5px;">Номер ${room.room_number}</h4>
+                            <div style="color: var(--text-light); margin-bottom: 5px;">${room.room_type_name}</div>
+                            <div>Вместимость: ${room.capacity} гостей</div>
+                        </div>
+                        <div style="font-weight: 700; color: var(--primary-color);">
+                            ${formatPrice(room.current_price)}/ночь
+                        </div>
+                    </div>
+                    <button class="select-alternative-btn" 
+                        onclick="selectAlternativeRoom(${room.id}, '${room.room_number}', '${room.room_type_name}', ${room.current_price})">
+                        Выбрать этот номер
+                    </button>
+                </div>
+            `;
+                });
+
+                roomsList.innerHTML = roomsHtml;
+            } else {
+                roomsSection.style.display = 'none';
+            }
+
+            // Показываем модалку
+            modal.style.display = 'flex';
+        }
+
+        // Закрыть модалку
+        function closeAlternativesModal() {
+            document.getElementById('alternativesModal').style.display = 'none';
+        }
+
+        // Выбрать альтернативную дату
+        function selectAlternativeDate(newCheckinDate, roomNumber, roomType) {
+            const reservationData = getReservationData();
+            const nights = parseInt(reservationData.nights) || 1;
+
+            // Обновляем дату в localStorage
+            if (reservationData) {
+                reservationData.checkin_date = newCheckinDate;
+                reservationData.date = newCheckinDate;
+
+                // Рассчитываем новую дату выезда
+                const checkin = new Date(newCheckinDate);
+                const checkout = new Date(checkin.getTime() + nights * 24 * 60 * 60 * 1000);
+                reservationData.checkout_date = checkout.toISOString().split('T')[0];
+
+                // Сохраняем в localStorage
+                const bookingData = JSON.parse(localStorage.getItem('hotelBookingData') || '{}');
+                bookingData.reservation = reservationData;
+                localStorage.setItem('hotelBookingData', JSON.stringify(bookingData));
+
+                // Закрываем модалку
+                closeAlternativesModal();
+
+                // Обновляем страницу
+                alert(`✅ Даты обновлены! Новый заезд: ${formatDisplayDate(newCheckinDate)}\nВыбран номер: ${roomNumber} (${roomType})`);
+                loadRooms();
+                updateBookingSummary();
+            }
+        }
+
+        // Выбрать альтернативный номер
+        function selectAlternativeRoom(roomId, roomNumber, roomType, price) {
+            // Создаем объект номера
+            const roomData = {
+                id: roomId,
+                room_number: roomNumber,
+                room_type_name: roomType,
+                current_price: price
+            };
+
+            // Устанавливаем выбранный номер
+            selectedRoom = roomData;
+
+            // Закрываем модалку
+            closeAlternativesModal();
+
+            // Обновляем интерфейс
+            alert(`✅ Выбран новый номер: ${roomNumber} (${roomType})`);
+
+            // Обновляем отображение
+            const roomElement = document.querySelector(`[data-room*='"id":${roomId}']`);
+            if (roomElement) {
+                document.querySelectorAll('#roomsList .option-item').forEach(item => {
+                    item.classList.remove('selected');
+                });
+                roomElement.classList.add('selected');
+            }
+
+            updateBookingSummary();
+        }
+
+        // Обновляем функцию confirmBooking для обработки альтернатив
+        async function confirmBooking() {
+            if (!selectedRoom) {
+                alert('Пожалуйста, выберите номер для бронирования');
+                return;
+            }
+
+            const confirmMessage = `Вы подтверждаете бронирование?
+
+Дата заезда: ${formatDisplayDate(getReservationData().checkin_date || getReservationData().date)}
+Количество ночей: ${getReservationData().nights || 1}
+Номер: ${selectedRoom.room_number} (${selectedRoom.room_type_name})
+Общая стоимость: ${formatPrice(calculateTotalCost())}`;
+
+            if (!confirm(confirmMessage)) {
+                return;
+            }
+
+            const bookingData = {
+                room: selectedRoom,
+                services: selectedServices,
+                meals: selectedMeals,
+                spa: selectedSpa,
+                totalCost: calculateTotalCost(),
+                timestamp: new Date().toISOString()
+            };
+
+            try {
+                console.log('🚀 Начинаем подтверждение бронирования...');
+
+                // Показываем индикатор загрузки
+                const submitBtn = document.querySelector('.submit-btn');
+                const originalText = submitBtn.textContent;
+                submitBtn.textContent = '⏳ Сохранение...';
+                submitBtn.disabled = true;
+
+                // Сохраняем бронирование
+                const saveResult = await saveBookingDirectly(bookingData);
+
+                // Очищаем localStorage после успешного сохранения
+                localStorage.removeItem('hotelBookingData');
+
+                // Показываем сообщение об успехе
+                alert(`🎉 Бронирование успешно подтверждено!
+Номер бронирования: ${saveResult.bookingNumber || saveResult.bookingId}
+Мы отправили детали на вашу почту.`);
+
+                // Закрываем окно через 2 секунды
+                setTimeout(() => {
+                    closePage();
+                }, 2000);
+
+            } catch (error) {
+                console.error('❌ Ошибка при подтверждении бронирования:', error);
+
+                // Восстанавливаем кнопку
+                const submitBtn = document.querySelector('.submit-btn');
+                submitBtn.textContent = '✅ ПОДТВЕРДИТЬ БРОНИРОВАНИЕ';
+                submitBtn.disabled = false;
+
+                // Проверяем, есть ли альтернативы в ошибке
+                if (error.alternatives) {
+                    // Показываем модалку с альтернативами
+                    showAlternativesModal(error.alternatives);
+                } else {
+                    // Показываем обычную ошибку
+                    alert(`❌ Ошибка бронирования: ${error.message}
+
+Пожалуйста, попробуйте еще раз или свяжитесь с нами по телефону.`);
+                }
+            }
+        }
+
+        async function saveBookingDirectly(selectionData) {
+            try {
+                const reservationData = getReservationData();
+
+                console.log('📦 Данные из localStorage:', reservationData);
+
+                const fullBookingData = {
+                    bookingNumber: generateBookingNumber(),
+                    room: selectionData.room,
+                    guestInfo: {
+                        name: reservationData.name || '',
+                        lastname: reservationData.lastname || '',
+                        surname: reservationData.surname || '',
+                        phone: reservationData.phone || '',
+                        email: reservationData.email || ''
+                    },
+                    checkinDate: reservationData.checkin_date || reservationData.date || new Date().toISOString().split('T')[0],
+                    checkoutDate: reservationData.checkout_date || new Date(
+                        new Date(reservationData.checkin_date || reservationData.date).getTime() +
+                        (parseInt(reservationData.nights) || 1) * 24 * 60 * 60 * 1000
+                    ).toISOString().split('T')[0],
+                    guestCount: reservationData.guests || '1',
+                    totalCost: selectionData.totalCost,
+                    services: selectionData.services || {},
+                    meals: selectionData.meals || {},
+                    spa: selectionData.spa || {},
+                    passportInfo: {
+                        series: reservationData.passport_series || '',
+                        number: reservationData.passport_number || '',
+                        issuedBy: reservationData.passport_issued || '',
+                        issueDate: reservationData.passport_date || ''
+                    }
+                };
+
+                console.log('🚀 Отправка данных на сервер:', fullBookingData);
+
+                const response = await fetch('http://localhost:3000/api/bookings', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(fullBookingData)
+                });
+
+                const responseText = await response.text();
+                console.log('📨 Ответ сервера:', responseText);
+
+                if (!response.ok) {
+                    try {
+                        const errorData = JSON.parse(responseText);
+
+                        // Если сервер вернул альтернативы - показываем их
+                        if (errorData.roomNotAvailable && errorData.alternatives) {
+                            const error = new Error('Номер занят на выбранные даты');
+                            error.alternatives = errorData.alternatives;
+                            throw error;
+                        }
+
+                        throw new Error(errorData.error || errorData.details || 'Ошибка сервера');
+                    } catch (e) {
+                        if (e instanceof SyntaxError) {
+                            throw new Error(responseText);
+                        }
+                        throw e;
+                    }
+                }
+
+                return JSON.parse(responseText);
+
+            } catch (error) {
+                console.error('❌ Ошибка сохранения бронирования:', error);
+                throw error;
+            }
+        }
+
+        // И добавьте простую функцию для показа альтернатив
+        function showSimpleAlternatives(alternatives) {
+            let message = "❌ Этот номер занят на выбранные даты.\n\n";
+
+            if (alternatives.alternativeDates && alternatives.alternativeDates.length > 0) {
+                message += "📅 Ближайшие свободные даты:\n";
+                alternatives.alternativeDates.forEach(date => {
+                    const formattedDate = formatDisplayDate(date.next_available_date);
+                    message += `• ${formattedDate} (Номер ${date.room_number})\n`;
+                });
+                message += "\n";
+            }
+
+            if (alternatives.alternativeRooms && alternatives.alternativeRooms.length > 0) {
+                message += "🏨 Другие свободные номера на ваши даты:\n";
+                alternatives.alternativeRooms.forEach(room => {
+                    message += `• Номер ${room.room_number} (${room.room_type_name}) - ${formatPrice(room.current_price)}/ночь\n`;
+                });
+            }
+
+            if (message.includes("📅") || message.includes("🏨")) {
+                const userChoice = confirm(message + "\n\nХотите выбрать один из этих вариантов?");
+                if (userChoice) {
+                    // Простой выбор: если есть альтернативные номера, предлагаем выбрать первый
+                    if (alternatives.alternativeRooms && alternatives.alternativeRooms.length > 0) {
+                        const room = alternatives.alternativeRooms[0];
+                        selectAlternativeRoom(room.id, room.room_number, room.room_type_name, room.current_price);
+                    }
+                }
+            } else {
+                alert("К сожалению, альтернативных вариантов не найдено. Попробуйте другие даты.");
+            }
+        }
+
+        // Обновите обработку ошибки в confirmBooking:
+        if (error.alternatives) {
+            // Показываем альтернативы
+            showSimpleAlternatives(error.alternatives);
+        } else {
+            alert(`❌ Ошибка бронирования: ${error.message}\n\nПожалуйста, попробуйте еще раз.`);
+        }
     </script>
 
     <script src="trpoJs.js"></script>
