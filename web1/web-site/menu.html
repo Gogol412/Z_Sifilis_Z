@@ -48,9 +48,75 @@
             margin: 0 auto;
         }
 
+        /* Top Bar для страницы */
+        .top-bar {
+            background: var(--primary-color);
+            color: var(--white);
+            padding: 8px 0;
+            font-size: 13px;
+            position: relative;
+            z-index: 1001;
+            font-weight: 500;
+            margin-bottom: 20px;
+            border-radius: var(--border-radius);
+        }
+
+        .contact-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 40px;
+        }
+
+        .phone {
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+        }
+
+        .phone::before {
+            content: "📞";
+            font-size: 14px;
+        }
+
+        .language-switcher {
+            display: flex;
+            gap: 6px;
+            background: rgba(255, 255, 255, 0.15);
+            padding: 4px;
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+        }
+
+        .language-btn {
+            background: transparent;
+            border: none;
+            color: var(--white);
+            padding: 6px 16px;
+            cursor: pointer;
+            border-radius: 6px;
+            transition: var(--transition);
+            font-weight: 500;
+            font-size: 12px;
+        }
+
+        .language-btn.active {
+            background: var(--gold);
+            box-shadow: var(--shadow-sm);
+            color: var(--primary-color);
+        }
+
+        .language-btn:hover:not(.active) {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
         .header {
             text-align: center;
-            margin-bottom: 60px;
+            margin-bottom: 40px;
         }
 
         .header h1 {
@@ -377,6 +443,13 @@
                 padding: 10px 20px;
                 font-size: 14px;
             }
+
+            .contact-info {
+                flex-direction: column;
+                gap: 10px;
+                text-align: center;
+                padding: 0 20px;
+            }
         }
 
         /* Плавная прокрутка */
@@ -401,33 +474,71 @@
         ::-webkit-scrollbar-thumb:hover {
             background: var(--accent-color);
         }
+
+        /* Language Notification */
+        .language-notification {
+            position: fixed;
+            top: 120px;
+            right: 40px;
+            background: var(--primary-color);
+            color: var(--white);
+            padding: 25px 30px;
+            border-radius: var(--border-radius);
+            z-index: 1003;
+            font-weight: 600;
+            box-shadow: var(--shadow-lg);
+            transition: var(--transition);
+            opacity: 0;
+            transform: translateX(100px);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            font-family: 'Inter', sans-serif;
+        }
+
+        .language-notification.show {
+            opacity: 1;
+            transform: translateX(0);
+        }
     </style>
 </head>
 
 <body>
     <div class="container">
+        <!-- Top Bar с переключателем языка -->
+        <div class="top-bar">
+            <div class="contact-info">
+                <div class="phone">+375(29)-131-68-19</div>
+                <div class="language-switcher">
+                    <button class="language-btn active" data-lang="ru">RU</button>
+                    <button class="language-btn" data-lang="en">EN</button>
+                </div>
+            </div>
+        </div>
+
         <div class="header">
-            <h1>🍽️ МЕНЮ РЕСТОРАНА</h1>
-            <p>Изысканные блюда международной кухни от наших шеф-поваров</p>
+            <h1 data-ru="🍽️ МЕНЮ РЕСТОРАНА" data-en="🍽️ RESTAURANT MENU">🍽️ МЕНЮ РЕСТОРАНА</h1>
+            <p data-ru="Изысканные блюда международной кухни от наших шеф-поваров" data-en="Exquisite international cuisine dishes from our chefs">Изысканные блюда международной кухни от наших шеф-поваров</p>
 
             <!-- Панель управления -->
             <div class="control-panel">
                 <div class="search-box">
                     <input type="text" id="searchInput" class="search-input"
-                        placeholder="Поиск по названию или ингредиентам...">
-                    <button id="searchBtn" class="btn search-btn">🔍 Поиск</button>
+                        placeholder="Поиск по названию или ингредиентам..."
+                        data-ru="Поиск по названию или ингредиентам..."
+                        data-en="Search by name or ingredients...">
+                    <button id="searchBtn" class="btn search-btn" data-ru="🔍 Поиск" data-en="🔍 Search">🔍 Поиск</button>
                 </div>
-                <button onclick="closePage()" class="btn back-btn">← Вернуться</button>
+                <button onclick="window.history.back()" class="btn back-btn" data-ru="← Назад" data-en="← Back">← Назад</button>
             </div>
 
             <!-- Фильтр по категориям -->
             <div class="category-filter">
-                <button class="category-btn active" data-category="all">Все блюда</button>
-                <button class="category-btn" data-category="starters">Закуски</button>
-                <button class="category-btn" data-category="soups">Супы</button>
-                <button class="category-btn" data-category="main">Основные блюда</button>
-                <button class="category-btn" data-category="desserts">Десерты</button>
-                <button class="category-btn" data-category="drinks">Напитки</button>
+                <button class="category-btn active" data-category="all" data-ru="Все блюда" data-en="All dishes">Все блюда</button>
+                <button class="category-btn" data-category="starters" data-ru="Закуски" data-en="Starters">Закуски</button>
+                <button class="category-btn" data-category="soups" data-ru="Супы" data-en="Soups">Супы</button>
+                <button class="category-btn" data-category="main" data-ru="Основные блюда" data-en="Main courses">Основные блюда</button>
+                <button class="category-btn" data-category="desserts" data-ru="Десерты" data-en="Desserts">Десерты</button>
+                <button class="category-btn" data-category="drinks" data-ru="Напитки" data-en="Drinks">Напитки</button>
             </div>
 
             <div class="stats" id="stats">Загрузка...</div>
@@ -444,11 +555,6 @@
         let allDishes = [];
         const API_BASE = 'http://localhost:3000';
         let currentCategory = 'all';
-
-        // Функция для закрытия страницы
-        function closePage() {
-            window.close();
-        }
 
         // Функция для загрузки блюд
         async function loadDishes(searchTerm = '', category = 'all') {
@@ -550,16 +656,18 @@
             // Обновляем активную кнопку
             document.querySelectorAll('.category-btn').forEach(btn => {
                 btn.classList.remove('active');
+                if (btn.getAttribute('data-category') === category) {
+                    btn.classList.add('active');
+                }
             });
-            event.target.classList.add('active');
             
             loadDishes(document.getElementById('searchInput').value.trim(), category);
         }
 
-        // Функция для форматирования цены
+        // Функция для форматирования цены в белорусских рублях
         function formatPrice(price) {
-            if (!price) return '0 ₽';
-            return `${parseFloat(price).toFixed(2)} ₽`;
+            if (!price) return '0 Byn';
+            return `${parseFloat(price).toFixed(2)} Byn`;
         }
 
         // Функция для экранирования HTML
@@ -571,6 +679,95 @@
                 .replace(/>/g, "&gt;")
                 .replace(/"/g, "&quot;")
                 .replace(/'/g, "&#039;");
+        }
+
+        // Класс для управления переключением языка
+        class LanguageSwitcher {
+            constructor() {
+                this.currentLang = 'ru';
+                this.currentNotification = null;
+                this.init();
+            }
+
+            init() {
+                // Обработчики для кнопок перевода
+                document.querySelectorAll('.language-btn').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        const lang = e.target.dataset.lang;
+                        this.switchLanguage(lang);
+                    });
+                });
+
+                // Загружаем сохраненный язык из localStorage
+                const savedLang = localStorage.getItem('hotelLang');
+                if (savedLang && savedLang !== 'ru') {
+                    this.switchLanguage(savedLang);
+                }
+            }
+
+            switchLanguage(lang) {
+                if (this.currentLang === lang) return;
+
+                // Удаляем предыдущее уведомление, если оно есть
+                this.removeCurrentNotification();
+
+                this.currentLang = lang;
+
+                // Обновляем активную кнопку
+                document.querySelectorAll('.language-btn').forEach(btn => {
+                    btn.classList.toggle('active', btn.dataset.lang === lang);
+                });
+
+                // Обновляем все элементы с атрибутами data-ru и data-en
+                document.querySelectorAll('[data-ru]').forEach(element => {
+                    if (element.tagName === 'INPUT' || element.tagName === 'TEXTAREA') {
+                        element.placeholder = element.getAttribute(`data-${lang}`);
+                    } else {
+                        element.textContent = element.getAttribute(`data-${lang}`);
+                    }
+                });
+
+                // Обновляем атрибут lang у html
+                document.documentElement.lang = lang;
+
+                // Сохраняем выбор в localStorage
+                localStorage.setItem('hotelLang', lang);
+
+                // Показываем уведомление о смене языка
+                this.showLanguageNotification(lang);
+            }
+
+            removeCurrentNotification() {
+                if (this.currentNotification) {
+                    this.currentNotification.remove();
+                    this.currentNotification = null;
+                }
+            }
+
+            showLanguageNotification(lang) {
+                // Создаем уведомление
+                const notification = document.createElement('div');
+                notification.className = 'language-notification show';
+                notification.textContent = lang === 'ru'
+                    ? 'Язык изменен на русский'
+                    : 'Language switched to English';
+
+                document.body.appendChild(notification);
+                this.currentNotification = notification;
+
+                // Удаляем уведомление через 2 секунды
+                setTimeout(() => {
+                    notification.classList.remove('show');
+                    setTimeout(() => {
+                        if (notification.parentNode) {
+                            notification.parentNode.removeChild(notification);
+                        }
+                        if (this.currentNotification === notification) {
+                            this.currentNotification = null;
+                        }
+                    }, 300);
+                }, 2000);
+            }
         }
 
         // Обработчики событий
@@ -601,6 +798,9 @@
                     changeCategory(this.getAttribute('data-category'));
                 });
             });
+
+            // Инициализируем переключатель языка
+            new LanguageSwitcher();
         });
 
         // Автообновление каждые 30 секунд

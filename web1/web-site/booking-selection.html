@@ -50,9 +50,75 @@
             margin: 0 auto;
         }
 
+        /* Top Bar для страницы */
+        .top-bar {
+            background: var(--primary-color);
+            color: var(--white);
+            padding: 8px 0;
+            font-size: 13px;
+            position: relative;
+            z-index: 1001;
+            font-weight: 500;
+            margin-bottom: 20px;
+            border-radius: var(--border-radius);
+        }
+
+        .contact-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 40px;
+        }
+
+        .phone {
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+        }
+
+        .phone::before {
+            content: "📞";
+            font-size: 14px;
+        }
+
+        .language-switcher {
+            display: flex;
+            gap: 6px;
+            background: rgba(255, 255, 255, 0.15);
+            padding: 4px;
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+        }
+
+        .language-btn {
+            background: transparent;
+            border: none;
+            color: var(--white);
+            padding: 6px 16px;
+            cursor: pointer;
+            border-radius: 6px;
+            transition: var(--transition);
+            font-weight: 500;
+            font-size: 12px;
+        }
+
+        .language-btn.active {
+            background: var(--gold);
+            box-shadow: var(--shadow-sm);
+            color: var(--primary-color);
+        }
+
+        .language-btn:hover:not(.active) {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
         .header {
             text-align: center;
-            margin-bottom: 60px;
+            margin-bottom: 40px;
         }
 
         .header h1 {
@@ -401,6 +467,13 @@
                 width: 100%;
                 justify-content: space-between;
             }
+
+            .contact-info {
+                flex-direction: column;
+                gap: 10px;
+                text-align: center;
+                padding: 0 20px;
+            }
         }
 
         /* Плавная прокрутка */
@@ -603,6 +676,31 @@
             margin-bottom: 20px;
             border-left: 4px solid #e74c3c;
         }
+
+        /* Language Notification */
+        .language-notification {
+            position: fixed;
+            top: 120px;
+            right: 40px;
+            background: var(--primary-color);
+            color: var(--white);
+            padding: 25px 30px;
+            border-radius: var(--border-radius);
+            z-index: 1003;
+            font-weight: 600;
+            box-shadow: var(--shadow-lg);
+            transition: var(--transition);
+            opacity: 0;
+            transform: translateX(100px);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            font-family: 'Inter', sans-serif;
+        }
+
+        .language-notification.show {
+            opacity: 1;
+            transform: translateX(0);
+        }
     </style>
 </head>
 
@@ -626,7 +724,229 @@
         <div id="debugContent"></div>
     </div>
 
+    <div class="container">
+        <!-- Top Bar с переключателем языка -->
+        <div class="top-bar">
+            <div class="contact-info">
+                <div class="phone">+375(29)-131-68-19</div>
+                <div class="language-switcher">
+                    <button class="language-btn active" data-lang="ru">RU</button>
+                    <button class="language-btn" data-lang="en">EN</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="header">
+
+            <h1 data-ru="🎯 ВЫБОР УСЛУГ" data-en="🎯 SERVICE SELECTION">🎯 ВЫБОР УСЛУГ</h1>
+            <p data-ru="Завершите ваше бронирование, выбрав номер и дополнительные услуги" data-en="Complete your booking by selecting a room and additional services">Завершите ваше бронирование, выбрав номер и дополнительные услуги</p>
+
+            <!-- Панель управления -->
+            <div class="control-panel">
+                <button onclick="refreshData()" class="btn" style="background: var(--gradient-primary); color: white;" data-ru="🔄 Обновить данные" data-en="🔄 Refresh Data">
+                    🔄 Обновить данные
+                </button>
+                <button onclick="window.history.back()" class="btn back-btn" data-ru="← Назад" data-en="← Back">← Назад</button>
+            </div>
+        </div>
+
+        <!-- Сводная информация -->
+        <div class="summary-panel">
+            <h2 class="summary-title" data-ru="Ваше бронирование" data-en="Your Booking">Ваше бронирование</h2>
+            <div class="summary-items">
+                <div class="summary-item">
+                    <span data-ru="Дата заезда:" data-en="Check-in Date:">Дата заезда:</span>
+                    <strong id="checkinDate">-</strong>
+                </div>
+                <div class="summary-item">
+                    <span data-ru="Количество гостей:" data-en="Number of Guests:">Количество гостей:</span>
+                    <strong id="guestCount">-</strong>
+                </div>
+                <div class="summary-item" id="selectedRoomItem" style="display: none;">
+                    <span data-ru="Выбранный номер:" data-en="Selected Room:">Выбранный номер:</span>
+                    <strong id="selectedRoomName">-</strong>
+                </div>
+                <div class="summary-total">
+                    <span data-ru="Общая стоимость:" data-en="Total Cost:">Общая стоимость:</span>
+                    <strong id="totalCost">0 Byn</strong>
+                </div>
+            </div>
+        </div>
+
+        <!-- Контейнер для выбора услуг -->
+        <div class="selection-grid">
+            <!-- Выбор номера -->
+            <div class="selection-category">
+                <div class="category-header">
+                    <h3 class="category-title" data-ru="🏨 ВЫБОР НОМЕРА" data-en="🏨 ROOM SELECTION">🏨 ВЫБОР НОМЕРА</h3>
+                    <div class="category-icon">🛏️</div>
+                </div>
+                <div class="options-list" id="roomsList">
+                    <div class="loading">Загрузка номеров...</div>
+                </div>
+            </div>
+
+            <!-- Дополнительные услуги -->
+            <div class="selection-category">
+                <div class="category-header">
+                    <h3 class="category-title" data-ru="⭐ ДОПОЛНИТЕЛЬНЫЕ УСЛУГИ" data-en="⭐ ADDITIONAL SERVICES">⭐ ДОПОЛНИТЕЛЬНЫЕ УСЛУГИ</h3>
+                    <div class="category-icon">✨</div>
+                </div>
+                <div class="options-list" id="servicesList">
+                    <div class="loading">Загрузка услуг...</div>
+                </div>
+            </div>
+
+            <!-- Питание -->
+            <div class="selection-category">
+                <div class="category-header">
+                    <h3 class="category-title" data-ru="🍽️ ВЫБОР ПИТАНИЯ" data-en="🍽️ MEAL SELECTION">🍽️ ВЫБОР ПИТАНИЯ</h3>
+                    <div class="category-icon">🥘</div>
+                </div>
+                <div class="options-list" id="mealsList">
+                    <div class="loading">Загрузка вариантов питания...</div>
+                </div>
+            </div>
+
+            <!-- SPA и Wellness -->
+            <div class="selection-category">
+                <div class="category-header">
+                    <h3 class="category-title" data-ru="💆 SPA И WELLNESS" data-en="💆 SPA AND WELLNESS">💆 SPA И WELLNESS</h3>
+                    <div class="category-icon">🧖</div>
+                </div>
+                <div class="options-list" id="spaList">
+                    <div class="loading">Загрузка SPA-услуг...</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Кнопка подтверждения -->
+        <button class="submit-btn" onclick="confirmBooking()" data-ru="✅ ПОДТВЕРДИТЬ БРОНИРОВАНИЕ" data-en="✅ CONFIRM BOOKING">✅ ПОДТВЕРДИТЬ БРОНИРОВАНИЕ</button>
+        <div id="alternativesModal" class="alternatives-modal">
+            <div class="alternatives-content">
+                <div class="alternatives-header">
+                    <h2 class="alternatives-title" data-ru="🎯 Альтернативные варианты" data-en="🎯 Alternative Options">🎯 Альтернативные варианты</h2>
+                    <button class="close-alternatives" onclick="closeAlternativesModal()">&times;</button>
+                </div>
+
+                <div class="original-info">
+                    <p data-ru="Выбранный номер" data-en="Selected room">Выбранный номер <strong id="originalRoomName"></strong> <span data-ru="занят на даты" data-en="is occupied on dates">занят на даты</span>
+                        <strong id="originalDates"></strong>.
+                    </p>
+                </div>
+
+                <!-- Альтернативные даты -->
+                <div class="alternatives-section" id="alternativeDatesSection" style="display: none;">
+                    <h3 class="section-title" data-ru="📅 Ближайшие свободные даты для этого номера" data-en="📅 Nearest available dates for this room">📅 Ближайшие свободные даты для этого номера</h3>
+                    <div id="alternativeDatesList"></div>
+                </div>
+
+                <!-- Альтернативные номера -->
+                <div class="alternatives-section" id="alternativeRoomsSection" style="display: none;">
+                    <h3 class="section-title" data-ru="🏨 Другие свободные номера на ваши даты" data-en="🏨 Other available rooms for your dates">🏨 Другие свободные номера на ваши даты</h3>
+                    <div id="alternativeRoomsList"></div>
+                </div>
+
+                <div style="text-align: center; margin-top: 30px;">
+                    <button onclick="closeAlternativesModal()" class="btn"
+                        style="background: var(--gradient-primary); color: white;" data-ru="Вернуться к выбору" data-en="Back to selection">
+                        Вернуться к выбору
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script>
+        // Класс для управления переключением языка
+        class LanguageSwitcher {
+            constructor() {
+                this.currentLang = 'ru';
+                this.currentNotification = null;
+                this.init();
+            }
+
+            init() {
+                // Обработчики для кнопок перевода
+                document.querySelectorAll('.language-btn').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        const lang = e.target.dataset.lang;
+                        this.switchLanguage(lang);
+                    });
+                });
+
+                // Загружаем сохраненный язык из localStorage
+                const savedLang = localStorage.getItem('hotelLang');
+                if (savedLang && savedLang !== 'ru') {
+                    this.switchLanguage(savedLang);
+                }
+            }
+
+            switchLanguage(lang) {
+                if (this.currentLang === lang) return;
+
+                // Удаляем предыдущее уведомление, если оно есть
+                this.removeCurrentNotification();
+
+                this.currentLang = lang;
+
+                // Обновляем активную кнопку
+                document.querySelectorAll('.language-btn').forEach(btn => {
+                    btn.classList.toggle('active', btn.dataset.lang === lang);
+                });
+
+                // Обновляем все элементы с атрибутами data-ru и data-en
+                document.querySelectorAll('[data-ru]').forEach(element => {
+                    if (element.tagName === 'INPUT' || element.tagName === 'TEXTAREA') {
+                        element.placeholder = element.getAttribute(`data-${lang}`);
+                    } else {
+                        element.textContent = element.getAttribute(`data-${lang}`);
+                    }
+                });
+
+                // Обновляем атрибут lang у html
+                document.documentElement.lang = lang;
+
+                // Сохраняем выбор в localStorage
+                localStorage.setItem('hotelLang', lang);
+
+                // Показываем уведомление о смене языка
+                this.showLanguageNotification(lang);
+            }
+
+            removeCurrentNotification() {
+                if (this.currentNotification) {
+                    this.currentNotification.remove();
+                    this.currentNotification = null;
+                }
+            }
+
+            showLanguageNotification(lang) {
+                // Создаем уведомление
+                const notification = document.createElement('div');
+                notification.className = 'language-notification show';
+                notification.textContent = lang === 'ru'
+                    ? 'Язык изменен на русский'
+                    : 'Language switched to English';
+
+                document.body.appendChild(notification);
+                this.currentNotification = notification;
+
+                // Удаляем уведомление через 2 секунды
+                setTimeout(() => {
+                    notification.classList.remove('show');
+                    setTimeout(() => {
+                        if (notification.parentNode) {
+                            notification.parentNode.removeChild(notification);
+                        }
+                        if (this.currentNotification === notification) {
+                            this.currentNotification = null;
+                        }
+                    }, 300);
+                }, 2000);
+            }
+        }
+
         function toggleDebug() {
             const debugDiv = document.getElementById('debugInfo');
             const contentDiv = document.getElementById('debugContent');
@@ -645,130 +965,7 @@
 
             debugDiv.style.display = debugDiv.style.display === 'none' ? 'block' : 'none';
         }
-    </script>
-    <div class="container">
-        <div class="header">
-
-            <h1>🎯 ВЫБОР УСЛУГ</h1>
-            <p>Завершите ваше бронирование, выбрав номер и дополнительные услуги</p>
-
-            <!-- Панель управления -->
-            <div class="control-panel">
-                <button onclick="refreshData()" class="btn" style="background: var(--gradient-primary); color: white;">
-                    🔄 Обновить данные
-                </button>
-                <button onclick="closePage()" class="btn back-btn">← Вернуться</button>
-            </div>
-        </div>
-
-        <!-- Сводная информация -->
-        <div class="summary-panel">
-            <h2 class="summary-title">Ваше бронирование</h2>
-            <div class="summary-items">
-                <div class="summary-item">
-                    <span>Дата заезда:</span>
-                    <strong id="checkinDate">-</strong>
-                </div>
-                <div class="summary-item">
-                    <span>Количество гостей:</span>
-                    <strong id="guestCount">-</strong>
-                </div>
-                <div class="summary-item" id="selectedRoomItem" style="display: none;">
-                    <span>Выбранный номер:</span>
-                    <strong id="selectedRoomName">-</strong>
-                </div>
-                <div class="summary-total">
-                    <span>Общая стоимость:</span>
-                    <strong id="totalCost">0 ₽</strong>
-                </div>
-            </div>
-        </div>
-
-        <!-- Контейнер для выбора услуг -->
-        <div class="selection-grid">
-            <!-- Выбор номера -->
-            <div class="selection-category">
-                <div class="category-header">
-                    <h3 class="category-title">🏨 ВЫБОР НОМЕРА</h3>
-                    <div class="category-icon">🛏️</div>
-                </div>
-                <div class="options-list" id="roomsList">
-                    <div class="loading">Загрузка номеров...</div>
-                </div>
-            </div>
-
-            <!-- Дополнительные услуги -->
-            <div class="selection-category">
-                <div class="category-header">
-                    <h3 class="category-title">⭐ ДОПОЛНИТЕЛЬНЫЕ УСЛУГИ</h3>
-                    <div class="category-icon">✨</div>
-                </div>
-                <div class="options-list" id="servicesList">
-                    <div class="loading">Загрузка услуг...</div>
-                </div>
-            </div>
-
-            <!-- Питание -->
-            <div class="selection-category">
-                <div class="category-header">
-                    <h3 class="category-title">🍽️ ВЫБОР ПИТАНИЯ</h3>
-                    <div class="category-icon">🥘</div>
-                </div>
-                <div class="options-list" id="mealsList">
-                    <div class="loading">Загрузка вариантов питания...</div>
-                </div>
-            </div>
-
-            <!-- SPA и Wellness -->
-            <div class="selection-category">
-                <div class="category-header">
-                    <h3 class="category-title">💆 SPA И WELLNESS</h3>
-                    <div class="category-icon">🧖</div>
-                </div>
-                <div class="options-list" id="spaList">
-                    <div class="loading">Загрузка SPA-услуг...</div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Кнопка подтверждения -->
-        <button class="submit-btn" onclick="confirmBooking()">✅ ПОДТВЕРДИТЬ БРОНИРОВАНИЕ</button>
-        <div id="alternativesModal" class="alternatives-modal">
-            <div class="alternatives-content">
-                <div class="alternatives-header">
-                    <h2 class="alternatives-title">🎯 Альтернативные варианты</h2>
-                    <button class="close-alternatives" onclick="closeAlternativesModal()">&times;</button>
-                </div>
-
-                <div class="original-info">
-                    <p>Выбранный номер <strong id="originalRoomName"></strong> занят на даты
-                        <strong id="originalDates"></strong>.
-                    </p>
-                </div>
-
-                <!-- Альтернативные даты -->
-                <div class="alternatives-section" id="alternativeDatesSection" style="display: none;">
-                    <h3 class="section-title">📅 Ближайшие свободные даты для этого номера</h3>
-                    <div id="alternativeDatesList"></div>
-                </div>
-
-                <!-- Альтернативные номера -->
-                <div class="alternatives-section" id="alternativeRoomsSection" style="display: none;">
-                    <h3 class="section-title">🏨 Другие свободные номера на ваши даты</h3>
-                    <div id="alternativeRoomsList"></div>
-                </div>
-
-                <div style="text-align: center; margin-top: 30px;">
-                    <button onclick="closeAlternativesModal()" class="btn"
-                        style="background: var(--gradient-primary); color: white;">
-                        Вернуться к выбору
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <script>
+        
         function refreshData() {
             console.log('Обновление данных...');
             loadData();
@@ -799,11 +996,6 @@
         let selectedServices = {};
         let selectedMeals = {};
         let selectedSpa = {};
-
-        // Функция для закрытия страницы
-        function closePage() {
-            window.close();
-        }
 
         async function loadData() {
             try {
@@ -1389,9 +1581,9 @@
 Номер бронирования: ${saveResult.bookingNumber || saveResult.bookingId}
 Мы отправили детали на вашу почту.`);
 
-                // Закрываем окно через 2 секунды
+                // Возвращаемся на главную страницу через 2 секунды
                 setTimeout(() => {
-                    closePage();
+                    window.location.href = 'trpoMain.html';
                 }, 2000);
 
             } catch (error) {
@@ -1437,13 +1629,7 @@
                     totalCost: selectionData.totalCost,
                     services: selectionData.services || {},
                     meals: selectionData.meals || {},
-                    spa: selectionData.spa || {},
-                    passportInfo: {
-                        series: reservationData.passport_series || '',
-                        number: reservationData.passport_number || '',
-                        issuedBy: reservationData.passport_issued || '',
-                        issueDate: reservationData.passport_date || ''
-                    }
+                    spa: selectionData.spa || {}
                 };
 
                 console.log('🚀 Отправка данных на сервер:', fullBookingData);
@@ -1488,8 +1674,8 @@
 
         // Вспомогательные функции
         function formatPrice(price) {
-            if (!price) return '0 ₽';
-            return `${parseFloat(price).toFixed(2)} ₽`;
+            if (!price) return '0 Byn';
+            return `${parseFloat(price).toFixed(2)} Byn`;
         }
 
         function escapeHtml(unsafe) {
@@ -1522,6 +1708,9 @@
                 selectedMeals = booking.meals || {};
                 selectedSpa = booking.spa || {};
             }
+
+            // Инициализируем переключатель языка
+            new LanguageSwitcher();
         });
         // Показать модалку с альтернативами
         function showAlternativesModal(alternativesData) {
@@ -1723,9 +1912,9 @@
 Номер бронирования: ${saveResult.bookingNumber || saveResult.bookingId}
 Мы отправили детали на вашу почту.`);
 
-                // Закрываем окно через 2 секунды
+                // Возвращаемся на главную страницу через 2 секунды
                 setTimeout(() => {
-                    closePage();
+                    window.location.href = 'trpoMain.html';
                 }, 2000);
 
             } catch (error) {
@@ -1774,13 +1963,7 @@
                     totalCost: selectionData.totalCost,
                     services: selectionData.services || {},
                     meals: selectionData.meals || {},
-                    spa: selectionData.spa || {},
-                    passportInfo: {
-                        series: reservationData.passport_series || '',
-                        number: reservationData.passport_number || '',
-                        issuedBy: reservationData.passport_issued || '',
-                        issueDate: reservationData.passport_date || ''
-                    }
+                    spa: selectionData.spa || {}
                 };
 
                 console.log('🚀 Отправка данных на сервер:', fullBookingData);
@@ -1864,8 +2047,6 @@
             alert(`❌ Ошибка бронирования: ${error.message}\n\nПожалуйста, попробуйте еще раз.`);
         }
     </script>
-
-    <script src="trpoJs.js"></script>
 </body>
 
 </html>

@@ -280,12 +280,13 @@ class BookingManager {
     init() {
         this.loadBookingData();
         this.setupEventListeners();
-        this.setupDateValidation(); // Добавляем валидацию даты
+        this.setupDateValidation(); // Добавляем валидацию даты сразу
+        this.setupPhoneValidation(); // Добавляем валидацию телефона
     }
 
     // Добавляем метод для настройки валидации даты
     setupDateValidation() {
-        const dateInput = document.getElementById('date');
+        const dateInput = document.getElementById('checkin-date');
         if (dateInput) {
             // Устанавливаем минимальную дату (сегодня)
             const today = new Date().toISOString().split('T')[0];
@@ -295,11 +296,103 @@ class BookingManager {
             dateInput.addEventListener('change', () => {
                 this.validateDate(dateInput);
             });
+
+            // Сразу валидируем текущее значение
+            this.validateDate(dateInput);
+        }
+    }
+
+    // Добавляем метод для настройки валидации телефона
+    setupPhoneValidation() {
+        const phoneInput = document.getElementById('phone');
+        if (phoneInput) {
+            phoneInput.addEventListener('input', (e) => {
+                this.formatPhoneNumber(e.target);
+            });
+            
+            phoneInput.addEventListener('blur', (e) => {
+                this.validatePhoneNumber(e.target);
+            });
+        }
+    }
+
+    // Метод форматирования номера телефона
+    formatPhoneNumber(input) {
+        let value = input.value.replace(/\D/g, ''); // Удаляем все нецифровые символы
+        
+        if (!value.startsWith('375')) {
+            // Если номер начинается с +375, оставляем, иначе добавляем
+            if (!value.startsWith('+375')) {
+                // Если пользователь начал вводить не с +375, добавляем это автоматически
+                if (value.length > 0 && value[0] !== '3') {
+                    value = '375' + value;
+                } else if (value.startsWith('3') && value.length > 3) {
+                    value = '375' + value.substring(1);
+                }
+            }
+        }
+        
+        // Форматируем номер в формат +375 (XX) XXX-XX-XX
+        let formattedValue = '+375';
+        
+        if (value.length > 3) {
+            formattedValue += ` (${value.substring(3, 5)}`;
+        }
+        if (value.length > 5) {
+            formattedValue += `) ${value.substring(5, 8)}`;
+        }
+        if (value.length > 8) {
+            formattedValue += `-${value.substring(8, 10)}`;
+        }
+        if (value.length > 10) {
+            formattedValue += `-${value.substring(10, 12)}`;
+        }
+        
+        input.value = formattedValue;
+    }
+
+    // Метод валидации телефона
+    validatePhoneNumber(input) {
+        const value = input.value;
+        const phoneRegex = /^\+375\s\(\d{2}\)\s\d{3}-\d{2}-\d{2}$/;
+        
+        if (!phoneRegex.test(value)) {
+            this.showPhoneError('❌ Неправильный формат телефона. Используйте формат: +375 (XX) XXX-XX-XX');
+            input.style.borderColor = '#e74c3c';
+            return false;
+        } else {
+            this.hidePhoneError();
+            input.style.borderColor = '#27ae60';
+            return true;
+        }
+    }
+
+    // Показ ошибки телефона
+    showPhoneError(message) {
+        let errorElement = document.querySelector('.phone-error');
+        if (!errorElement) {
+            errorElement = document.createElement('div');
+            errorElement.className = 'error-message phone-error';
+            document.getElementById('phone').parentNode.appendChild(errorElement);
+        }
+        errorElement.textContent = message;
+        errorElement.style.display = 'block';
+    }
+
+    hidePhoneError() {
+        const errorElement = document.querySelector('.phone-error');
+        if (errorElement) {
+            errorElement.style.display = 'none';
         }
     }
 
     // Метод валидации даты
     validateDate(dateInput) {
+        if (!dateInput || !dateInput.value) {
+            this.showDateError('❌ Пожалуйста, выберите дату заезда');
+            return false;
+        }
+
         const selectedDate = new Date(dateInput.value);
         const today = new Date();
         today.setHours(0, 0, 0, 0);
@@ -321,7 +414,7 @@ class BookingManager {
         if (!errorElement) {
             errorElement = document.createElement('div');
             errorElement.className = 'error-message date-error';
-            document.getElementById('date').parentNode.appendChild(errorElement);
+            document.getElementById('checkin-date').parentNode.appendChild(errorElement);
         }
         errorElement.textContent = message;
         errorElement.style.display = 'block';
@@ -334,25 +427,35 @@ class BookingManager {
         }
     }
 
-    // Обновляем обработчик отправки формы
     handleReservationSubmit(e) {
         e.preventDefault();
 
-        // Валидация даты
-        const dateInput = document.getElementById('date');
-        if (!this.validateDate(dateInput)) {
+        // Валидация даты заезда
+        const checkinInput = document.getElementById('checkin-date');
+        if (!this.validateDate(checkinInput)) {
+            return false;
+        }
+
+        // Валидация телефона
+        const phoneInput = document.getElementById('phone');
+        if (!this.validatePhoneNumber(phoneInput)) {
             return false;
         }
 
         const formData = new FormData(e.target);
         const reservationData = Object.fromEntries(formData);
 
-        // Добавляем количество гостей, если поле отсутствует
-        if (!reservationData.guests) {
-            reservationData.guests = '1';
-        }
+        // Преобразуем дату в формат YYYY-MM-DD
+        const dateValue = new Date(reservationData.checkin_date);
+        reservationData.date = dateValue.toISOString().split('T')[0]; // для обратной совместимости
 
-        console.log('Сохранение данных бронирования:', reservationData); // Добавьте эту строку для отладки
+        // Вычисляем дату выезда на основе количества ночей
+        const nights = parseInt(reservationData.nights) || 1;
+        const checkoutDate = new Date(dateValue);
+        checkoutDate.setDate(checkoutDate.getDate() + nights);
+        reservationData.checkout_date = checkoutDate.toISOString().split('T')[0];
+
+        console.log('Сохранение данных бронирования:', reservationData);
 
         // Сохраняем данные формы
         this.bookingData.reservation = reservationData;
@@ -395,59 +498,19 @@ class BookingManager {
         // Обработчик формы бронирования
         const reservationForm = document.querySelector('.reservation-form');
         if (reservationForm) {
+            console.log('Найдена форма бронирования');
             reservationForm.addEventListener('submit', (e) => {
+                console.log('Форма отправлена');
                 this.handleReservationSubmit(e);
             });
-        }
-
-        // Обработчик кнопки паспортных данных
-        const passportToggle = document.querySelector('.passport-toggle');
-        const passportFields = document.querySelector('.passport-fields');
-
-        if (passportToggle && passportFields) {
-            passportToggle.addEventListener('click', function () {
-                passportFields.classList.toggle('active');
-
-                // Меняем текст кнопки
-                const currentLang = localStorage.getItem('hotelLang') || 'ru';
-                if (passportFields.classList.contains('active')) {
-                    this.textContent = currentLang === 'ru'
-                        ? '− СКРЫТЬ ПАСПОРТНЫЕ ДАННЫЕ'
-                        : '− HIDE PASSPORT DETAILS';
-                } else {
-                    this.textContent = currentLang === 'ru'
-                        ? '+ ДОБАВИТЬ ПАСПОРТНЫЕ ДАННЫЕ'
-                        : '+ ADD PASSPORT DETAILS';
-                }
-            });
-        }
-
-        // Добавляем поле для количества гостей, если его нет
-        this.addGuestsField();
-    }
-
-    // Метод для добавления поля количества гостей
-    addGuestsField() {
-        if (!document.getElementById('guests')) {
-            const dateGroup = document.querySelector('.form-group:has(#date)');
-            if (dateGroup) {
-                const currentLang = localStorage.getItem('hotelLang') || 'ru';
-                const labelText = currentLang === 'ru' ? 'КОЛИЧЕСТВО ГОСТЕЙ' : 'NUMBER OF GUESTS';
-                const guestsHtml = `
-                    <div class="form-group">
-                        <label for="guests">${labelText}</label>
-                        <input type="number" id="guests" name="guests" min="1" max="10" value="1" required>
-                    </div>
-                `;
-                dateGroup.insertAdjacentHTML('afterend', guestsHtml);
-            }
+        } else {
+            console.error('Форма бронирования не найдена!');
         }
     }
 
     openBookingSelection() {
-        // Открываем новое окно с выбором услуг
-        const features = 'width=1200,height=800,scrollbars=yes,resizable=yes,menubar=no,toolbar=no,location=no,status=no';
-        window.open('booking-selection.html', 'bookingSelection', features);
+        // Открываем страницу выбора услуг в новом окне
+        window.location.href = 'booking-selection.html';
     }
 
     async saveBookingToServer(bookingData) {
@@ -599,9 +662,8 @@ class ButtonManager {
         if (assortmentBtn) {
             assortmentBtn.addEventListener('click', (e) => {
                 e.preventDefault();
-                // Открываем новое окно с файлом assortiment.html
-                const features = 'width=800,height=600,scrollbars=yes,resizable=yes,menubar=no,toolbar=no,location=no,status=no';
-                window.open('assortiment.html', 'assortiment', features);
+                // Открываем assortiment.html на новой странице
+                window.open('assortiment.html', '_blank');
             });
         }
     }
@@ -611,9 +673,8 @@ class ButtonManager {
         if (menuBtn) {
             menuBtn.addEventListener('click', (e) => {
                 e.preventDefault();
-                // Открываем новое окно с файлом menu.html
-                const features = 'width=800,height=600,scrollbars=yes,resizable=yes,menubar=no,toolbar=no,location=no,status=no';
-                window.open('menu.html', 'menu', features);
+                // Открываем menu.html на новой странице
+                window.open('menu.html', '_blank');
             });
         }
     }
@@ -708,8 +769,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // Глобальные вспомогательные функции
 function formatPrice(price) {
-    if (!price) return '0 ₽';
-    return `${parseFloat(price).toFixed(2)} ₽`;
+    if (!price) return '0 Byn';
+    return `${parseFloat(price).toFixed(2)} Byn`;
 }
 
 function escapeHtml(unsafe) {
@@ -766,9 +827,9 @@ function isValidEmail(email) {
     return emailRegex.test(email);
 }
 
-// Функция для проверки валидности телефона
+// Функция для проверки валидности телефона (формат +375 (XX) XXX-XX-XX)
 function isValidPhone(phone) {
-    const phoneRegex = /^[\+]?[0-9\s\-\(\)]{10,}$/;
+    const phoneRegex = /^\+375\s\(\d{2}\)\s\d{3}-\d{2}-\d{2}$/;
     return phoneRegex.test(phone);
 }
 
