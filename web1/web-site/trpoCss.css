@@ -35,7 +35,7 @@ body {
     font-weight: 400;
 }
 
-/* Header Styles - УМЕНЬШЕНА ВЫСОТА */
+/* Header Styles */
 .top-bar {
     background: var(--primary-color);
     color: var(--white);
@@ -46,7 +46,6 @@ body {
     font-weight: 500;
 }
 
-/* Добавьте в trpoCss.css */
 .form-group input:invalid {
     border-color: #e74c3c;
     box-shadow: 0 0 5px rgba(231, 76, 60, 0.3);
@@ -66,7 +65,6 @@ body {
 .date-error {
     display: block;
 }
-
 
 .contact-info {
     display: flex;
@@ -164,7 +162,6 @@ nav {
     z-index: 1002;
 }
 
-/* ИСПРАВЛЕННЫЕ СТИЛИ ДЛЯ НАВИГАЦИОННЫХ ССЫЛОК */
 .nav-link {
     text-decoration: none;
     color: var(--text-color);
@@ -198,7 +195,6 @@ nav {
     transform: none;
 }
 
-/* Кнопка Reservation */
 .reservation-btn {
     background: var(--gradient-gold);
     color: var(--primary-color) !important;
@@ -354,7 +350,6 @@ nav {
     text-align: left;
 }
 
-/* АНИМАЦИЯ ДЛЯ ABOUT CONTENT */
 .about-content {
     padding: 60px;
     background: rgba(255, 255, 255, 0.12);
@@ -419,7 +414,6 @@ nav {
     gap: 35px;
 }
 
-/* АНИМАЦИЯ ДЛЯ CONTACT ITEMS */
 .contact-item {
     background: rgba(255, 255, 255, 0.12);
     padding: 45px;
@@ -492,7 +486,6 @@ nav {
     margin-top: 80px;
 }
 
-/* АНИМАЦИЯ ДЛЯ HOTEL CARDS */
 .hotel-card {
     background: var(--white);
     padding: 60px 50px;
@@ -586,7 +579,6 @@ nav {
     color: var(--white);
 }
 
-/* АНИМАЦИЯ ДЛЯ RESTAURANT CONTENT */
 .restaurant-content {
     max-width: 900px;
     margin: 0 auto;
@@ -649,7 +641,6 @@ nav {
     color: var(--white);
 }
 
-/* АНИМАЦИЯ ДЛЯ BAR CONTENT */
 .bar-content {
     max-width: 900px;
     margin: 0 auto;
@@ -767,7 +758,6 @@ nav {
     gap: 60px;
 }
 
-/* АНИМАЦИЯ ДЛЯ EXPERIENCE ITEMS */
 .experience-item {
     padding: 60px 50px;
     background: var(--white);
@@ -830,12 +820,12 @@ nav {
     transform: translateY(5px);
 }
 
-/* Reservation Section - ОБНОВЛЕННЫЕ СТИЛИ */
+/* ===== Reservation Section - УМЕНЬШЕННАЯ ВЫСОТА ===== */
 .reservation-section {
     background: var(--gradient-primary);
     position: relative;
-    padding: 60px 20px; /* Уменьшаем отступы */
-    min-height: auto; /* Убираем минимальную высоту */
+    padding: 30px 15px;
+    min-height: auto;
 }
 
 .reservation-section::before {
@@ -853,38 +843,38 @@ nav {
     max-width: 750px;
     width: 100%;
     background: var(--white);
-    padding: 40px 35px; /* Уменьшаем padding */
-    border-radius: var(--border-radius-lg);
-    box-shadow: var(--shadow-lg);
+    padding: 25px 20px;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow-md);
     position: relative;
     z-index: 1;
     transition: var(--transition);
-    margin: 0 auto; /* Центрируем */
+    margin: 0 auto;
 }
 
 .reservation-container:hover {
-    transform: translateY(-10px);
+    transform: translateY(-5px);
     box-shadow: var(--shadow-lg);
 }
 
 .reservation-title {
     text-align: center;
-    margin-bottom: 40px; /* Уменьшаем отступ */
+    margin-bottom: 20px;
     color: var(--text-color);
     font-family: 'Playfair Display', serif;
-    font-size: 2.5rem; /* Уменьшаем размер */
+    font-size: 1.8rem;
     font-weight: 400;
     transition: var(--transition);
 }
 
 .reservation-container:hover .reservation-title {
-    transform: scale(1.05);
+    transform: scale(1.02);
 }
 
 .reservation-form {
     display: flex;
     flex-direction: column;
-    gap: 20px; /* Уменьшаем отступы между полями */
+    gap: 10px;
 }
 
 .form-group {
@@ -894,44 +884,44 @@ nav {
 }
 
 .form-group label {
-    margin-bottom: 8px; /* Уменьшаем отступ */
+    margin-bottom: 5px;
     color: var(--text-color);
     font-weight: 600;
-    font-size: 0.9rem; /* Уменьшаем размер */
+    font-size: 0.8rem;
     text-transform: uppercase;
-    letter-spacing: 1px;
+    letter-spacing: 0.5px;
 }
 
 .form-group input {
-    padding: 15px 20px; /* Уменьшаем padding */
+    padding: 10px 12px;
     border: 2px solid #e8e8e8;
-    border-radius: var(--border-radius);
-    font-size: 1rem; /* Уменьшаем размер шрифта */
+    border-radius: 10px;
+    font-size: 0.9rem;
     transition: var(--transition);
     background: var(--background-color);
     font-family: 'Inter', sans-serif;
-    height: 48px; /* Фиксированная высота */
+    height: 40px;
 }
 
 .form-group input:focus {
     outline: none;
     border-color: var(--gold);
-    box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.1);
+    box-shadow: 0 0 0 2px rgba(212, 175, 55, 0.1);
     background: var(--white);
-    transform: translateY(-2px);
+    transform: translateY(-1px);
 }
 
 .passport-toggle {
     background: var(--background-color);
     border: 2px solid #e8e8e8;
     color: var(--text-color);
-    padding: 14px 24px; /* Уменьшаем padding */
-    border-radius: var(--border-radius);
-    font-size: 1rem; /* Уменьшаем размер */
+    padding: 10px 16px;
+    border-radius: 10px;
+    font-size: 0.9rem;
     cursor: pointer;
     transition: var(--transition);
     text-align: center;
-    margin: 15px 0; /* Уменьшаем отступы */
+    margin: 8px 0;
     font-weight: 600;
     font-family: 'Inter', sans-serif;
 }
@@ -940,26 +930,25 @@ nav {
     background: var(--gold);
     color: var(--primary-color);
     border-color: var(--gold);
-    transform: translateY(-2px);
+    transform: translateY(-1px);
 }
 
 .passport-fields {
     display: none;
-    gap: 20px; /* Уменьшаем отступы */
-    margin-top: 20px;
-    padding: 25px; /* Уменьшаем padding */
+    gap: 10px;
+    margin-top: 10px;
+    padding: 15px;
     background: var(--background-color);
-    border-radius: var(--border-radius);
+    border-radius: 10px;
     border: 1px solid #e8e8e8;
-    animation: slideDown 0.4s ease-out;
+    animation: slideDown 0.3s ease-out;
 }
 
 @keyframes slideDown {
     from {
         opacity: 0;
-        transform: translateY(-15px);
+        transform: translateY(-10px);
     }
-
     to {
         opacity: 1;
         transform: translateY(0);
@@ -973,7 +962,7 @@ nav {
 
 .passport-row {
     display: flex;
-    gap: 20px; /* Уменьшаем отступы */
+    gap: 10px;
 }
 
 .passport-row .form-group {
@@ -984,18 +973,18 @@ nav {
     background: var(--gradient-gold);
     color: var(--primary-color);
     border: none;
-    padding: 18px; /* Уменьшаем padding */
-    border-radius: 50px;
-    font-size: 1.1rem; /* Уменьшаем размер */
+    padding: 14px;
+    border-radius: 40px;
+    font-size: 0.95rem;
     font-weight: 600;
     cursor: pointer;
     transition: var(--transition);
-    margin-top: 25px; /* Уменьшаем отступ */
+    margin-top: 15px;
     box-shadow: var(--shadow-md);
     font-family: 'Inter', sans-serif;
     position: relative;
     overflow: hidden;
-    height: 56px; /* Фиксированная высота */
+    height: 45px;
 }
 
 .submit-btn::before {
@@ -1006,7 +995,7 @@ nav {
     width: 100%;
     height: 100%;
     background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
-    transition: left 0.5s ease;
+    transition: left 0.4s ease;
 }
 
 .submit-btn:hover::before {
@@ -1014,7 +1003,7 @@ nav {
 }
 
 .submit-btn:hover {
-    transform: translateY(-3px) scale(1.05);
+    transform: translateY(-2px) scale(1.03);
     box-shadow: var(--shadow-lg);
 }
 
@@ -1022,7 +1011,7 @@ nav {
 .location {
     background: var(--primary-color);
     color: var(--white);
-    padding: 80px 40px; /* Уменьшаем padding */
+    padding: 60px 40px;
     text-align: center;
     position: relative;
 }
@@ -1039,8 +1028,8 @@ nav {
 }
 
 .location p {
-    font-size: 1.2rem; /* Уменьшаем размер */
-    letter-spacing: 2px; /* Уменьшаем межбуквенный интервал */
+    font-size: 1.2rem;
+    letter-spacing: 2px;
     font-weight: 300;
     position: relative;
     z-index: 1;
@@ -1146,18 +1135,18 @@ nav {
     }
 
     .reservation-container {
-        padding: 30px 20px;
-        margin: 15px;
+        padding: 20px 15px;
+        margin: 10px;
     }
 
     .reservation-title {
-        font-size: 1.8rem;
-        margin-bottom: 30px;
+        font-size: 1.6rem;
+        margin-bottom: 15px;
     }
 
     .passport-row {
         flex-direction: column;
-        gap: 15px;
+        gap: 8px;
     }
 
     .contacts-grid,
@@ -1194,21 +1183,28 @@ nav {
     }
 
     .reservation-section {
-        padding: 40px 15px;
+        padding: 20px 10px;
     }
 
     .reservation-form {
-        gap: 15px;
+        gap: 8px;
     }
 
     .form-group input {
-        padding: 12px 15px;
-        height: 44px;
+        padding: 8px 10px;
+        height: 36px;
+        font-size: 0.85rem;
+    }
+
+    .form-group label {
+        font-size: 0.75rem;
     }
 
     .submit-btn {
-        padding: 16px;
-        height: 52px;
+        padding: 12px;
+        height: 40px;
+        font-size: 0.9rem;
+        margin-top: 12px;
     }
 }
 
@@ -1262,7 +1258,7 @@ html {
     background: var(--accent-color);
 }
 
-/* ===== ЯКОРНЫЕ ССЫЛКИ ===== */
+/* Якорные ссылки */
 .anchor-links {
     position: fixed;
     right: 30px;
@@ -1411,7 +1407,7 @@ html {
     box-shadow: var(--shadow-lg);
 }
 
-/* Pulse animation for active anchor */
+/* Pulse animation */
 @keyframes pulse {
     0% {
         box-shadow: 0 0 0 0 rgba(212, 175, 55, 0.4);
